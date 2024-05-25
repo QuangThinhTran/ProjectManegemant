@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: 'postgres:14'
+    environment:
+      - 'POSTGRES_DB=ProjectManagement'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_USER=admin'
+    ports:
+      - '5432:5432'
+    volumes:
+        - 'postgres_project_db:/var/lib/postgresql/data'
+  postgres_test:
+    image: 'postgres:14'
+    environment:
+      - 'POSTGRES_DB=ProjectManagementTest'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_USER=admin'
+    ports:
+        - '5432:5432'
+    volumes:
+        - 'postgres_project_test_db:/var/lib/postgresql/data'
+volumes:
+    postgres_project_db:
+    postgres_project_test_db:
