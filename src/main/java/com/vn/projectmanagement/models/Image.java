@@ -1,6 +1,7 @@
 package com.vn.projectmanagement.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Entity
 @Table(name = "images")
 public class Image extends BaseModel {
     @Column(name = "path")

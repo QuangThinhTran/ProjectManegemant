@@ -1,18 +1,15 @@
 package com.vn.projectmanagement.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 @Getter
 @Setter
+@Entity
 @Table(name = "tasks")
 public class Task extends BaseModel{
     @Column(name = "task_code")
@@ -31,12 +28,12 @@ public class Task extends BaseModel{
     private Date expirationDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @Column(name = "project_id")
-    private List<Project> projectList;
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    private Project project;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @Column(name = "user_id")
-    private List<User> userList;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     public void setTaskCode() {
         Random random = new Random(6);

@@ -24,4 +24,12 @@ public class SwaggerMessages {
     // Login Messages
     public static final String LOGOUT_SUCCESS_MESSAGE = "Logout successful.";
 
+    // Role Messages
+    public static final String GET_ALL_ROLES = "Get all roles";
+    public static final String CREATE_ROLE = "Create role";
+    public static final String UPDATE_ROLE = "Update role";
+    public static final String DELETE_ROLE = "Delete role";
+    public static final String CREATE_ROLE_MESSAGE =  "{\"message\": \" Role created successfully \"}";
+    public static final String UPDATE_ROLE_MESSAGE =  "{\"message\": \" Role updated successfully \"}";
+    public static final String DELETE_ROLE_MESSAGE =  "{\"message\": \" Role deleted successfully \"}";
 }

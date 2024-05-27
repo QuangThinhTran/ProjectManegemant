@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Entity
 @Table(name = "projects")
 public class Project extends BaseModel{
     @Column(name = "title")
@@ -15,6 +16,9 @@ public class Project extends BaseModel{
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Task> taskList;
 
     @ManyToMany
     @JoinTable(
