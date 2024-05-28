@@ -2,19 +2,18 @@ package com.vn.projectmanagement.services;
 
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.repositories.RoleRepository;
-import com.vn.projectmanagement.services.interfaces.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class RoleService implements RoleServiceImpl {
+public class RoleServiceImpl implements com.vn.projectmanagement.services.interfaces.RoleService {
 
     private final RoleRepository roleRepository;
 
     @Autowired
-    public RoleService(RoleRepository roleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 

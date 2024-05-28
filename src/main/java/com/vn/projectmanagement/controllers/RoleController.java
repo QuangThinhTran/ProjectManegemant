@@ -9,7 +9,7 @@ import com.vn.projectmanagement.entity.request.CreateRoleRequest;
 import com.vn.projectmanagement.entity.request.UpdateRoleRequest;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.repositories.RoleRepository;
-import com.vn.projectmanagement.services.interfaces.RoleServiceImpl;
+import com.vn.projectmanagement.services.interfaces.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,26 +17,27 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Role Controller", description = "These endpoints are used to perform actions on role.")
-@SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
+@SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME) // Yêu cầu xác thực khi truy cập các endpoint trong controller này (đã được cấu hình trong SwaggerConfig)
 @RestController
 @RequestMapping("/api/v1/roles")
 public class RoleController extends ApiController {
 
     private final RoleRepository roleRepository;
-    private final RoleServiceImpl roleServiceImpl;
+    private final RoleService roleService;
 
     @Autowired
     public RoleController(
             RoleRepository roleRepository,
-            RoleServiceImpl roleServiceImpl
+            RoleService roleService
     ) {
         this.roleRepository = roleRepository;
-        this.roleServiceImpl = roleServiceImpl;
+        this.roleService = roleService;
     }
 
     @Operation(summary = SwaggerMessages.GET_ALL_ROLES)
@@ -61,8 +62,8 @@ public class RoleController extends ApiController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO> create(@RequestBody CreateRoleRequest role) {
-        roleServiceImpl.createRole(role.getName());
+    public ResponseEntity<ResponseDTO> create(@Valid @RequestBody CreateRoleRequest role) {
+        roleService.createRole(role.getName());
         return this.responseCreated(SwaggerMessages.CREATE_ROLE);
     }
 
@@ -75,8 +76,8 @@ public class RoleController extends ApiController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PutMapping("/update")
-    public ResponseEntity<ResponseDTO> update(@RequestBody UpdateRoleRequest role) {
-        roleServiceImpl.updateRole(role.getOldName(), role.getNewName());
+    public ResponseEntity<ResponseDTO> update(@Valid @RequestBody UpdateRoleRequest role) {
+        roleService.updateRole(role.getOldName(), role.getNewName());
         return this.responseSuccess(SwaggerMessages.UPDATE_ROLE);
     }
 
@@ -90,7 +91,7 @@ public class RoleController extends ApiController {
     })
     @DeleteMapping("/delete/{roleName}")
     public ResponseEntity<ResponseDTO> delete(@PathVariable String roleName) {
-        roleServiceImpl.deleteByName(roleName);
+        roleService.deleteByName(roleName);
         return this.responseSuccess(SwaggerMessages.DELETE_ROLE);
     }
 }

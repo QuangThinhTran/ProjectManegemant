@@ -26,10 +26,10 @@ public class SwaggerMessages {
 
     // Role Messages
     public static final String GET_ALL_ROLES = "Get all roles";
-    public static final String CREATE_ROLE = "Create role";
-    public static final String UPDATE_ROLE = "Update role";
-    public static final String DELETE_ROLE = "Delete role";
-    public static final String CREATE_ROLE_MESSAGE =  "{\"message\": \" Role created successfully \"}";
-    public static final String UPDATE_ROLE_MESSAGE =  "{\"message\": \" Role updated successfully \"}";
-    public static final String DELETE_ROLE_MESSAGE =  "{\"message\": \" Role deleted successfully \"}";
+    public static final String CREATE_ROLE = "Create role successfully";
+    public static final String UPDATE_ROLE = "Update role successfully";
+    public static final String DELETE_ROLE = "Delete role successfully";
+    public static final String CREATE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.CREATE_ROLE + "\"}";
+    public static final String UPDATE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.UPDATE_ROLE + "\"}";
+    public static final String DELETE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.DELETE_ROLE + "\"}";
 }

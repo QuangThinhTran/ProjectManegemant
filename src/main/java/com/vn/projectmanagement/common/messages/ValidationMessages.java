@@ -2,7 +2,9 @@ package com.vn.projectmanagement.common.messages;
 
 public class ValidationMessages {
     public static final String IS_REQUIRED = " is required";
-    public static final String IS_NOT_VALID = " is not valid";
+    public static final String IS_EMPTY = " is empty";
+    public static final String IS_INVALID = " is invalid";
+    public static final String IS_InVALID = " is invalid";
     public static final String IS_NOT_FOUND = " is not found";
     public static final String IS_EXISTED = " is existed";
     public static final String IS_NOT_MATCH = " is not match";
