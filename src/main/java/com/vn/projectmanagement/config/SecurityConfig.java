@@ -82,8 +82,8 @@ public class SecurityConfig {
                         // Cấu hình cho các request được phép truy cập vào các API của hệ thống thông qua các request (các API được phép truy cập sẽ được cấu hình ở đây)
                         // và các request không được phép truy cập sẽ được chuyển hướng về trang xác thực hoặc trả về lỗi xác thực
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/roles/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/role/**").permitAll()
                         .anyRequest().authenticated() // Các request khác sẽ được yêu cầu xác thực
                 );
         // Thêm JwtAuthFilter vào FilterChain để xác thực người dùng trong quá trình xác thực và phân quyền

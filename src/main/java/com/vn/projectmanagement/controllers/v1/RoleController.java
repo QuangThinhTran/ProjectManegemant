@@ -1,9 +1,11 @@
-package com.vn.projectmanagement.controllers;
+package com.vn.projectmanagement.controllers.v1;
 
+import com.vn.projectmanagement.common.constants.PathConstants;
 import com.vn.projectmanagement.common.swagger.SwaggerHelper;
 import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.config.SwaggerConfig;
+import com.vn.projectmanagement.controllers.ApiController;
 import com.vn.projectmanagement.entity.dto.ResponseDTO;
 import com.vn.projectmanagement.entity.request.CreateRoleRequest;
 import com.vn.projectmanagement.entity.request.UpdateRoleRequest;
@@ -20,12 +22,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Role Controller", description = "These endpoints are used to perform actions on role.")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME) // Yêu cầu xác thực khi truy cập các endpoint trong controller này (đã được cấu hình trong SwaggerConfig)
 @RestController
-@RequestMapping("/api/v1/roles")
+@Validated
+@RequestMapping(PathConstants.API_ROLE)
 public class RoleController extends ApiController {
 
     private final RoleRepository roleRepository;
@@ -48,7 +53,7 @@ public class RoleController extends ApiController {
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<Object> getRoles() {
         return ResponseEntity.ok().body(roleRepository.findAll());
     }
@@ -62,7 +67,7 @@ public class RoleController extends ApiController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO> create(@Valid @RequestBody CreateRoleRequest role) {
+    public ResponseEntity<ResponseDTO> create(@Valid @RequestBody CreateRoleRequest role, BindingResult bindingResult) {
         roleService.createRole(role.getName());
         return this.responseCreated(SwaggerMessages.CREATE_ROLE);
     }

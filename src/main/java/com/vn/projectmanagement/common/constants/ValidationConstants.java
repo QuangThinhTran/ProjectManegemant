@@ -1,6 +1,6 @@
-package com.vn.projectmanagement.common.messages;
+package com.vn.projectmanagement.common.constants;
 
-public class ValidationMessages {
+public class ValidationConstants {
     public static final String IS_REQUIRED = " is required";
     public static final String IS_EMPTY = " is empty";
     public static final String IS_INVALID = " is invalid";
