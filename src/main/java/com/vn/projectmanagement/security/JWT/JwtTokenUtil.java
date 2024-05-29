@@ -1,6 +1,7 @@
 package com.vn.projectmanagement.security.JWT;
 
 import com.vn.projectmanagement.entity.dto.AuthenticationDTO;
+import com.vn.projectmanagement.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -22,19 +23,20 @@ public class JwtTokenUtil {
     /**
      * Tạo ra chuỗi JWT Token
      *
-     * @param authenticationDTO thông tin của người dùng
+     * @param user thông tin của người dùng
      * @return chuỗi JWT Token
      */
-    public String generateToken(AuthenticationDTO authenticationDTO) {
+    public String generateToken(AuthenticationDTO user) {
         Date date = new Date();
         Date expirationDate = new Date(date.getTime() + this.expiration * 1000);
 
         SecretKey secretKey = Keys.hmacShaKeyFor(this.jwtSecret.getBytes());
         return Jwts.builder()
-                .setSubject(authenticationDTO.getUsername())
-                .claim("name", authenticationDTO.getName())
-                .claim("email", authenticationDTO.getEmail())
-                .claim("password", authenticationDTO.getPassword())
+                .setSubject(user.getUsername())
+                .claim("username", user.getUsername())
+                .claim("email", user.getEmail())
+                .claim("phone", user.getPhone())
+                .claim("role", user.getRole())
                 .setIssuedAt(date)
                 .setExpiration(expirationDate)
                 .signWith(secretKey)

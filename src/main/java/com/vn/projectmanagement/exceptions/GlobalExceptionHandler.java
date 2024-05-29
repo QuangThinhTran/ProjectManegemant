@@ -50,9 +50,21 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity<ApiErrorResponse> - trả về thông báo lỗi và status code
      */
     @ExceptionHandler(ApiRequestException.class)
-    public ResponseEntity<ApiRequestException> handleApiRequestException(ApiRequestException exception) {
-        ApiRequestException apiRequestException = new ApiRequestException(exception.getMessage(), exception.getStatus());
-        return new ResponseEntity<>(apiRequestException, exception.getStatus());
+    public ResponseEntity<ApiErrorResponse> handleApiRequestException(ApiRequestException exception) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(exception.getMessage(), exception.getStatus().value());
+        return ResponseEntity.status(exception.getStatus()).body(apiErrorResponse);
+    }
+
+    /**
+     * Xử lý lỗi khi không tìm thấy URL
+     *
+     * @param exception - đối tượng chứa thông tin lỗi và status code
+     * @return ResponseEntity<ApiErrorResponse> - trả về thông báo lỗi và status code
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNotFound(NoHandlerFoundException exception) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(NOT_FOUND_URL + exception.getRequestURL(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -64,11 +76,5 @@ public class GlobalExceptionHandler {
     private String getLastFieldFromPropertyPath(String propertyPath) {
         int lastDotIndex = propertyPath.lastIndexOf(".");
         return lastDotIndex != -1 ? propertyPath.substring(lastDotIndex + 1) : propertyPath;
-    }
-
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleNotFound(NoHandlerFoundException ex) {
-        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(NOT_FOUND_URL + ex.getRequestURL(), HttpStatus.NOT_FOUND.value());
-        return new ResponseEntity<>(apiErrorResponse, HttpStatus.NOT_FOUND);
     }
 }

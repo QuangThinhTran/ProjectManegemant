@@ -1,11 +1,11 @@
-package com.vn.projectmanagement.controllers.v1;
+package com.vn.projectmanagement.controllers.api;
 
 import com.vn.projectmanagement.common.constants.PathConstants;
 import com.vn.projectmanagement.common.swagger.SwaggerHelper;
 import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.config.SwaggerConfig;
-import com.vn.projectmanagement.controllers.ApiController;
+import com.vn.projectmanagement.controllers.BaseController;
 import com.vn.projectmanagement.entity.dto.ResponseDTO;
 import com.vn.projectmanagement.entity.request.CreateRoleRequest;
 import com.vn.projectmanagement.entity.request.UpdateRoleRequest;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Validated
 @RequestMapping(PathConstants.API_ROLE)
-public class RoleController extends ApiController {
+public class RoleController extends BaseController {
 
     private final RoleRepository roleRepository;
     private final RoleService roleService;
@@ -43,7 +43,7 @@ public class RoleController extends ApiController {
     ) {
         this.roleRepository = roleRepository;
         this.roleService = roleService;
-    }
+    } 
 
     @Operation(summary = SwaggerMessages.GET_ALL_ROLES)
     @ApiResponses(value = {

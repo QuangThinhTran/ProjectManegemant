@@ -1,4 +1,4 @@
-package com.vn.projectmanagement.controllers.v1;
+package com.vn.projectmanagement.controllers.api;
 
 import com.vn.projectmanagement.common.constants.PathConstants;
 import io.swagger.v3.oas.annotations.tags.Tag;

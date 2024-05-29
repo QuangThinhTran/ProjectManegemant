@@ -16,7 +16,7 @@ public class User extends BaseModel {
     private String username;
 
     @Column(name = "phone")
-    private String phoneNumber;
+    private String phone;
 
     @Column(name = "email")
     private String email;

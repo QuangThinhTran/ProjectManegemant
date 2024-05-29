@@ -1,8 +1,11 @@
 package com.vn.projectmanagement.services;
 
+import com.vn.projectmanagement.common.constants.ExceptionConstant;
+import com.vn.projectmanagement.exceptions.ApiRequestException;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -24,7 +27,7 @@ public class RoleServiceImpl implements com.vn.projectmanagement.services.interf
      */
     @Override
     public Role findByName(String name) {
-        return roleRepository.findByName(name).orElseThrow(() -> new RuntimeException("Role not found"));
+        return roleRepository.findByName(name).orElseThrow(() -> new ApiRequestException(ExceptionConstant.ROLE_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -34,7 +37,7 @@ public class RoleServiceImpl implements com.vn.projectmanagement.services.interf
      */
     @Override
     public Role findById(UUID id) {
-        return roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role not found"));
+        return roleRepository.findById(id).orElseThrow(() -> new ApiRequestException(ExceptionConstant.ROLE_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     /**
