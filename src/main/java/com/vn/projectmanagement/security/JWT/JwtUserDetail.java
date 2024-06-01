@@ -46,10 +46,10 @@ public class JwtUserDetail implements UserDetailsService {
     /**
      * Map role của người dùng thành các quyền
      *
-     * @param role role của người dùng
+     * @param roleName role của người dùng
      * @return danh sách các quyền của người dùng
      */
-    private Collection<GrantedAuthority> mapRolesToAuthorities(final Role role) {
+    private Collection<GrantedAuthority> mapRolesToAuthorities(final String roleName) {
         // Tạo danh sách quyền. Mỗi quyền sẽ được thêm vào danh sách dưới dạng SimpleGrantedAuthority
         // Ví dụ: authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         // Với ROLE_USER là quyền của người dùng. Nếu người dùng có nhiều quyền, thì thêm nhiều quyền vào danh sách
@@ -57,7 +57,7 @@ public class JwtUserDetail implements UserDetailsService {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
         // Thêm quyền của người dùng vào danh sách
-        authorities.add(new SimpleGrantedAuthority(role.getName()));
+        authorities.add(new SimpleGrantedAuthority(roleName));
         return authorities;
     }
 }

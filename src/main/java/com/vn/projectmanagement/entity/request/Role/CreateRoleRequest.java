@@ -1,7 +1,6 @@
-package com.vn.projectmanagement.entity.request;
+package com.vn.projectmanagement.entity.request.Role;
 
 import com.vn.projectmanagement.common.constants.ValidationConstants;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -9,6 +8,5 @@ import lombok.Data;
 public class CreateRoleRequest
 {
     @NotBlank(message = "Role name" + ValidationConstants.IS_REQUIRED)
-    @Column(name = "name")
     private String name;
 }

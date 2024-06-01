@@ -6,9 +6,9 @@ import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.config.SwaggerConfig;
 import com.vn.projectmanagement.controllers.BaseController;
-import com.vn.projectmanagement.entity.dto.ResponseDTO;
-import com.vn.projectmanagement.entity.request.CreateRoleRequest;
-import com.vn.projectmanagement.entity.request.UpdateRoleRequest;
+import com.vn.projectmanagement.entity.response.Response;
+import com.vn.projectmanagement.entity.request.Role.CreateRoleRequest;
+import com.vn.projectmanagement.entity.request.Role.UpdateRoleRequest;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.repositories.RoleRepository;
 import com.vn.projectmanagement.services.interfaces.RoleService;
@@ -67,7 +67,7 @@ public class RoleController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO> create(@Valid @RequestBody CreateRoleRequest role, BindingResult bindingResult) {
+    public ResponseEntity<Response> create(@Valid @RequestBody CreateRoleRequest role, BindingResult bindingResult) {
         roleService.createRole(role.getName());
         return this.responseCreated(SwaggerMessages.CREATE_ROLE);
     }
@@ -81,7 +81,7 @@ public class RoleController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PutMapping("/update")
-    public ResponseEntity<ResponseDTO> update(@Valid @RequestBody UpdateRoleRequest role) {
+    public ResponseEntity<Response> update(@Valid @RequestBody UpdateRoleRequest role) {
         roleService.updateRole(role.getOldName(), role.getNewName());
         return this.responseSuccess(SwaggerMessages.UPDATE_ROLE);
     }
@@ -95,7 +95,7 @@ public class RoleController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @DeleteMapping("/delete/{roleName}")
-    public ResponseEntity<ResponseDTO> delete(@PathVariable String roleName) {
+    public ResponseEntity<Response> delete(@PathVariable String roleName) {
         roleService.deleteByName(roleName);
         return this.responseSuccess(SwaggerMessages.DELETE_ROLE);
     }

@@ -1,4 +1,4 @@
-package com.vn.projectmanagement.entity.request;
+package com.vn.projectmanagement.entity.request.Role;
 
 import com.vn.projectmanagement.common.constants.ValidationConstants;
 import jakarta.validation.constraints.NotBlank;

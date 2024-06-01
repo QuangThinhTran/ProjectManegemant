@@ -1,8 +1,8 @@
 package com.vn.projectmanagement.services.interfaces;
 
 import com.vn.projectmanagement.entity.dto.AuthenticationDTO;
-import com.vn.projectmanagement.entity.request.LoginRequest;
-import com.vn.projectmanagement.entity.request.RegisterRequest;
+import com.vn.projectmanagement.entity.request.Auth.LoginRequest;
+import com.vn.projectmanagement.entity.request.Auth.RegisterRequest;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;
 

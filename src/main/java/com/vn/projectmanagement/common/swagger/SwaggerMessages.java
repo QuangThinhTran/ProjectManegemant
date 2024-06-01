@@ -32,4 +32,15 @@ public class SwaggerMessages {
     public static final String CREATE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.CREATE_ROLE + "\"}";
     public static final String UPDATE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.UPDATE_ROLE + "\"}";
     public static final String DELETE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.DELETE_ROLE + "\"}";
+
+    // User Messages
+    public static final String GET_ALL_USERS = "Get all users";
+    public static final String GET_USER_BY_USERNAME = "Get user by username";
+    public static final String CHANGE_PASSWORD = "Change password successfully";
+    public static final String UPDATE_USER = "Update profile user successfully";
+    public static final String DELETE_USER = "Delete user successfully";
+    public static final String GET_USER_BY_USERNAME_MESSAGE =  "{\"message\": \"" + SwaggerMessages.GET_USER_BY_USERNAME + "\"}";
+    public static final String CHANGE_PASSWORD_MESSAGE =  "{\"message\": \"" + SwaggerMessages.CHANGE_PASSWORD + "\"}";
+    public static final String UPDATE_USER_MESSAGE =  "{\"message\": \"" + SwaggerMessages.UPDATE_USER + "\"}";
+    public static final String DELETE_USER_MESSAGE =  "{\"message\": \"" + SwaggerMessages.DELETE_USER + "\"}";
 }

@@ -1,18 +1,16 @@
 package com.vn.projectmanagement.controllers.api;
 
 import com.vn.projectmanagement.common.constants.PathConstants;
-import com.vn.projectmanagement.common.constants.ValidationConstants;
 import com.vn.projectmanagement.common.swagger.SwaggerHelper;
 import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.config.SwaggerConfig;
 import com.vn.projectmanagement.controllers.BaseController;
 import com.vn.projectmanagement.entity.dto.AuthenticationDTO;
-import com.vn.projectmanagement.entity.dto.ResponseAuthDTO;
-import com.vn.projectmanagement.entity.dto.ResponseDTO;
-import com.vn.projectmanagement.entity.request.LoginRequest;
-import com.vn.projectmanagement.entity.request.RegisterRequest;
-import com.vn.projectmanagement.exceptions.ApiRequestException;
+import com.vn.projectmanagement.entity.response.ResponseAuth;
+import com.vn.projectmanagement.entity.response.Response;
+import com.vn.projectmanagement.entity.request.Auth.LoginRequest;
+import com.vn.projectmanagement.entity.request.Auth.RegisterRequest;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;
 import com.vn.projectmanagement.services.interfaces.AuthService;
@@ -63,7 +61,7 @@ public class AuthController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/register")
-    public ResponseEntity<ResponseAuthDTO> register(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult )
+    public ResponseEntity<ResponseAuth> register(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult )
     {
         this.userService.checkUsernameExist(registerRequest.getUsername());
 
@@ -77,7 +75,7 @@ public class AuthController extends BaseController {
         AuthenticationDTO user = authService.createUser(registerRequest, role);
         String token = this.authService.generateToken(user);
 
-        return this.responseWithAuthData(user, SwaggerMessages.REGISTRATION_SUCCESS_MESSAGE, HttpStatus.CREATED.value(), token);
+        return this.responseWithAuthData(user, SwaggerMessages.REGISTRATION_SUCCESS_MESSAGE, HttpStatus.CREATED, token);
     }
 
     @Operation(summary = SwaggerMessages.LOGIN_SUCCESS_MESSAGE)
@@ -89,12 +87,12 @@ public class AuthController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/login")
-    public ResponseEntity<ResponseAuthDTO> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ResponseAuth> login(@Valid @RequestBody LoginRequest loginRequest) {
         User user = this.userService.findByUsername(loginRequest.getUsername());
         this.authService.login(loginRequest);
         AuthenticationDTO authenticationDTO = this.authService.mapAuthenticationDTO(user);
         String token = this.authService.generateToken(authenticationDTO);
-        return responseWithAuthData(authenticationDTO, SwaggerMessages.LOGIN_SUCCESS_MESSAGE, HttpStatus.OK.value(), token);
+        return responseWithAuthData(authenticationDTO, SwaggerMessages.LOGIN_SUCCESS_MESSAGE, HttpStatus.OK, token);
     }
 
     @Operation(summary = SwaggerMessages.LOGOUT_SUCCESS_MESSAGE)
@@ -106,7 +104,7 @@ public class AuthController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/logout")
-    public ResponseEntity<ResponseDTO> logout() {
+    public ResponseEntity<Response> logout() {
         this.authService.logout();
         return this.responseSuccess(SwaggerMessages.LOGOUT_SUCCESS_MESSAGE);
     }

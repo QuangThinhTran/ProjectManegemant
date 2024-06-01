@@ -1,6 +1,5 @@
 package com.vn.projectmanagement.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,12 +23,12 @@ public class User extends BaseModel {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Task> taskList;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Task> taskList;
 
     @ManyToMany
     @JoinTable(
@@ -38,4 +37,8 @@ public class User extends BaseModel {
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private List<Project> projectList;
+
+    public String getRole() {
+        return role.getName();
+    }
 }

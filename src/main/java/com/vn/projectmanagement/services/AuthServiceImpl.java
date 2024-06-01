@@ -3,8 +3,8 @@ package com.vn.projectmanagement.services;
 import com.vn.projectmanagement.common.constants.ExceptionConstant;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.entity.dto.AuthenticationDTO;
-import com.vn.projectmanagement.entity.request.LoginRequest;
-import com.vn.projectmanagement.entity.request.RegisterRequest;
+import com.vn.projectmanagement.entity.request.Auth.LoginRequest;
+import com.vn.projectmanagement.entity.request.Auth.RegisterRequest;
 import com.vn.projectmanagement.exceptions.ApiRequestException;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;
@@ -111,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
         authenticationDTO.setUsername(user.getUsername());
         authenticationDTO.setEmail(user.getEmail());
         authenticationDTO.setPhone(user.getPhone());
-        authenticationDTO.setRole(user.getRole().getName());
+        authenticationDTO.setRole(user.getRole());
         return authenticationDTO;
     }
 }

@@ -28,7 +28,7 @@ public class JwtTokenUtil {
      */
     public String generateToken(AuthenticationDTO user) {
         Date date = new Date();
-        Date expirationDate = new Date(date.getTime() + this.expiration * 1000);
+        Date expirationDate = new Date(date.getTime() + this.expiration * 1000000 );
 
         SecretKey secretKey = Keys.hmacShaKeyFor(this.jwtSecret.getBytes());
         return Jwts.builder()
