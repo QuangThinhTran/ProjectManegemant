@@ -18,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -112,21 +110,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> filterUsers(Pageable pageable, int page, int size)
-    {
+    public Page<User> filterUsers(Pageable pageable, int page, int size) {
         return this.userRepository.listUser(PageRequest.of(page, size));
     }
 
     /**
      * Update a specific user
      *
-     * @param username - username
+     * @param username          - username
      * @param updateUserRequest - update user request
      * @return User
      */
     @Override
     public User update(String username, UpdateUserRequest updateUserRequest) {
-        System.out.println("username: " + username);
         User user = findByUsername(username);
 
         user.setUsername(updateUserRequest.getUsername());
@@ -139,7 +135,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Update password of a specific user
      *
-     * @param username - username
+     * @param username              - username
      * @param updatePasswordRequest - update password request
      */
     @Override

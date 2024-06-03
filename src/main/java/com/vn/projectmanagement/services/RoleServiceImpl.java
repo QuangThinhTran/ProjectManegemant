@@ -22,31 +22,35 @@ public class RoleServiceImpl implements com.vn.projectmanagement.services.interf
 
     /**
      * Find role by name
+     *
      * @param name - name of role
      * @return Role
      */
     @Override
     public Role findByName(String name) {
-        return roleRepository.findByName(name).orElseThrow(() -> new ApiRequestException(ExceptionConstant.ROLE_NOT_FOUND, HttpStatus.NOT_FOUND));
+        return roleRepository.findByName(name)
+                .orElseThrow(() -> new ApiRequestException(ExceptionConstant.ROLE_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     /**
      * Find role by id
+     *
      * @param id - id of role
      * @return Role
      */
     @Override
     public Role findById(UUID id) {
-        return roleRepository.findById(id).orElseThrow(() -> new ApiRequestException(ExceptionConstant.ROLE_NOT_FOUND, HttpStatus.NOT_FOUND));
+        return roleRepository.findById(id)
+                .orElseThrow(() -> new ApiRequestException(ExceptionConstant.ROLE_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     /**
      * Create role by name
+     *
      * @param name - name of role
      */
     @Override
-    public void createRole(String name)
-    {
+    public void createRole(String name) {
         Role role = new Role();
         role.setName(name);
         roleRepository.save(role);
@@ -54,6 +58,7 @@ public class RoleServiceImpl implements com.vn.projectmanagement.services.interf
 
     /**
      * Update role by name
+     *
      * @param name    - name of role
      * @param newName - new name of role
      */
@@ -66,11 +71,24 @@ public class RoleServiceImpl implements com.vn.projectmanagement.services.interf
 
     /**
      * Delete role by name
+     *
      * @param name - name of role
      */
     @Override
     public void deleteByName(String name) {
         Role roleCurrent = findByName(name);
         roleRepository.deleteById(roleCurrent.getId());
+    }
+
+    /**
+     * Check if the role is existed
+     *
+     * @param name - name of role
+     */
+    @Override
+    public void checkRoleExist(String name) {
+        if (roleRepository.findByName(name).isPresent()) {
+            throw new ApiRequestException(ExceptionConstant.ROLE_EXISTED, HttpStatus.BAD_REQUEST);
+        }
     }
 }

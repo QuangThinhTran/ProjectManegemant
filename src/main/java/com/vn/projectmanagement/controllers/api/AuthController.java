@@ -52,17 +52,26 @@ public class AuthController extends BaseController {
         this.userService = userService;
     }
 
+    /**
+     * Register a new user
+     *
+     * @param registerRequest - Request body for registration
+     * @param bindingResult   - Binding result for validation
+     * @return - Response entity with user data and token
+     */
     @Operation(summary = SwaggerMessages.REGISTRATION_SUCCESS_MESSAGE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.CREATED, description = SwaggerMessages.REGISTRATION_SUCCESS_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.CREATED, description = SwaggerMessages.REGISTRATION_SUCCESS_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = ResponseAuth.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/register")
-    public ResponseEntity<ResponseAuth> register(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult )
-    {
+    public ResponseEntity<ResponseAuth> register(
+            @Valid @RequestBody RegisterRequest registerRequest,
+            BindingResult bindingResult
+    ) {
         this.userService.checkUsernameExist(registerRequest.getUsername());
 
         this.userService.checkEmailExist(registerRequest.getEmail());
@@ -78,16 +87,25 @@ public class AuthController extends BaseController {
         return this.responseWithAuthData(user, SwaggerMessages.REGISTRATION_SUCCESS_MESSAGE, HttpStatus.CREATED, token);
     }
 
+    /**
+     * Login a user
+     *
+     * @param loginRequest - Request body for login
+     * @return - Response entity with user data and token
+     */
     @Operation(summary = SwaggerMessages.LOGIN_SUCCESS_MESSAGE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.LOGIN_SUCCESS_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.LOGIN_SUCCESS_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = ResponseAuth.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/login")
-    public ResponseEntity<ResponseAuth> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ResponseAuth> login(
+            @Valid @RequestBody LoginRequest loginRequest,
+            BindingResult bindingResult
+    ) {
         User user = this.userService.findByUsername(loginRequest.getUsername());
         this.authService.login(loginRequest);
         AuthenticationDTO authenticationDTO = this.authService.mapAuthenticationDTO(user);
@@ -95,9 +113,14 @@ public class AuthController extends BaseController {
         return responseWithAuthData(authenticationDTO, SwaggerMessages.LOGIN_SUCCESS_MESSAGE, HttpStatus.OK, token);
     }
 
+    /**
+     * Logout a user
+     *
+     * @return - Response entity with success message
+     */
     @Operation(summary = SwaggerMessages.LOGOUT_SUCCESS_MESSAGE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.LOGOUT_SUCCESS_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.LOGOUT_SUCCESS_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),

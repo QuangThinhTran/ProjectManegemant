@@ -1,6 +1,7 @@
 package com.vn.projectmanagement.entity.request.Role;
 
 import com.vn.projectmanagement.common.constants.ValidationConstants;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 

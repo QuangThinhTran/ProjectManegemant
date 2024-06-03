@@ -47,7 +47,13 @@ public class UserController extends BaseController {
         this.authService = authService;
     }
 
-    @Operation(summary = "Find user by email", description = "Find a specific record of User by email", tags = { "User Controller" })
+    /**
+     * Find user by email
+     *
+     * @param email - Email of user
+     * @return - Response entity with user data
+     */
+    @Operation(summary = "Find user by email", description = "Find a specific record of User by email", tags = {"User Controller"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = User.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
@@ -61,6 +67,14 @@ public class UserController extends BaseController {
         return this.responseWithData(user, HttpStatus.OK);
     }
 
+    /**
+     * Get all users
+     *
+     * @param size     - Number of records per page
+     * @param page     - Page number
+     * @param pageable - Pageable object
+     * @return - Response entity with list of users
+     */
     @GetMapping("/list")
     public ResponseEntity<ResponsePageable> findAllUsers(
             @RequestParam(defaultValue = "10") int size,
@@ -72,6 +86,14 @@ public class UserController extends BaseController {
         return this.responseWithPageable(userList, usersPage);
     }
 
+    /**
+     * Update user
+     *
+     * @param username      - Username of user
+     * @param userRequest   - Request body for updating user
+     * @param bindingResult - Binding result for validation
+     * @return - Response entity with user data
+     */
     @Operation(summary = SwaggerMessages.UPDATE_USER)
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.UPDATE_USER_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = User.class))),
@@ -91,6 +113,14 @@ public class UserController extends BaseController {
         return this.responseWithDataMessage(authenticationDTO, SwaggerMessages.UPDATE_ROLE, HttpStatus.OK);
     }
 
+    /**
+     * Change password of user
+     *
+     * @param username              - Username of user
+     * @param updatePasswordRequest - Request body for updating password
+     * @param bindingResult         - Binding result for validation
+     * @return - Response entity with success message
+     */
     @Operation(summary = SwaggerMessages.CHANGE_PASSWORD)
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.CHANGE_PASSWORD_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON)),

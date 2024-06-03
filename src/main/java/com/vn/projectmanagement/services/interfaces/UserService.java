@@ -10,12 +10,20 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserService {
     User findByUsername(String username);
+
     User findByEmail(String email);
+
     User create(RegisterRequest user, Role role);
+
     void checkUsernameExist(String username);
+
     void checkEmailExist(String email);
+
     void checkPhoneExist(String phone);
+
     Page<User> filterUsers(Pageable pageable, int page, int size);
+
     User update(String username, UpdateUserRequest updateUserRequest);
+
     void updatePassword(String username, UpdatePasswordRequest updatePasswordRequest);
 }

@@ -2,7 +2,6 @@ package com.vn.projectmanagement.controllers;
 
 import com.vn.projectmanagement.entity.response.*;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -40,7 +39,12 @@ public class BaseController {
      * @param token   - token to be returned
      * @return ResponseEntity<ResponseAuthDTO>
      */
-    public ResponseEntity<ResponseAuth> responseWithAuthData(Object data, String message, HttpStatus status, String token) {
+    public ResponseEntity<ResponseAuth> responseWithAuthData(
+            Object data,
+            String message,
+            HttpStatus status,
+            String token
+    ) {
         ResponseAuth responseAuthDTO = new ResponseAuth(data, message, status, token);
         return ResponseEntity.status(status).body(responseAuthDTO);
     }
@@ -61,7 +65,7 @@ public class BaseController {
     /**
      * Response with data response entity.
      *
-     * @param data - data to be returned
+     * @param data   - data to be returned
      * @param status - status to be returned
      * @return ResponseEntity<ResponseData>
      */
@@ -73,9 +77,9 @@ public class BaseController {
     /**
      * Response with data response entity.
      *
-     * @param data - data to be returned
+     * @param data     - data to be returned
      * @param pageable - pageable to be returned
-     * @param <T>  - <T> to be returned
+     * @param <T>      - <T> to be returned
      * @return ResponsePageable
      */
     public <T> ResponseEntity<ResponsePageable> responseWithPageable(List<T> data, Page<T> pageable) {

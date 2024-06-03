@@ -45,8 +45,13 @@ public class RoleController extends BaseController {
     ) {
         this.roleRepository = roleRepository;
         this.roleService = roleService;
-    } 
+    }
 
+    /**
+     * Get all roles
+     *
+     * @return - Response entity with list of roles
+     */
     @Operation(summary = SwaggerMessages.GET_ALL_ROLES)
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.GET_ALL_ROLES, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Role.class))),
@@ -60,6 +65,13 @@ public class RoleController extends BaseController {
         return ResponseEntity.ok().body(roleRepository.findAll());
     }
 
+    /**
+     * Create a new role
+     *
+     * @param role - Request body for creating a new role
+     * @param bindingResult - Binding result for validation
+     * @return - Response entity with success message
+     */
     @Operation(summary =SwaggerMessages.CREATE_ROLE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.CREATED, description = SwaggerMessages.CREATE_ROLE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.CREATE_ROLE_MESSAGE))),
@@ -70,6 +82,7 @@ public class RoleController extends BaseController {
     })
     @PostMapping("/create")
     public ResponseEntity<Response> create(@Valid @RequestBody CreateRoleRequest role, BindingResult bindingResult) {
+        roleService.checkRoleExist(role.getName());
         roleService.createRole(role.getName());
         return this.responseCreated(SwaggerMessages.CREATE_ROLE);
     }
@@ -83,11 +96,18 @@ public class RoleController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PutMapping("/update")
-    public ResponseEntity<Response> update(@Valid @RequestBody UpdateRoleRequest role) {
+    public ResponseEntity<Response> update(@Valid @RequestBody UpdateRoleRequest role, BindingResult bindingResult) {
+        roleService.checkRoleExist(role.getOldName());
         roleService.updateRole(role.getOldName(), role.getNewName());
         return this.responseSuccess(SwaggerMessages.UPDATE_ROLE);
     }
 
+    /**
+     * Delete a role by name
+     *
+     * @param roleName - Role name to delete
+     * @return - Response entity with success message
+     */
     @Operation(summary =SwaggerMessages.DELETE_ROLE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.DELETE_ROLE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.DELETE_ROLE_MESSAGE))),

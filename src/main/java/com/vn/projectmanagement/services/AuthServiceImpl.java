@@ -42,8 +42,7 @@ public class AuthServiceImpl implements AuthService {
      * @return user
      */
     @Override
-    public AuthenticationDTO createUser(RegisterRequest registerRequest, Role role)
-    {
+    public AuthenticationDTO createUser(RegisterRequest registerRequest, Role role) {
         return mapAuthenticationDTO(this.userService.create(registerRequest, role));
     }
 
@@ -55,7 +54,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void login(LoginRequest loginRequest) {
         try {
-            Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+            Authentication authentication =
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
             Authentication authenticated = authenticationManager.authenticate(authentication);
             SecurityContextHolder.getContext().setAuthentication(authenticated);
         } catch (Exception e) {
@@ -105,8 +105,7 @@ public class AuthServiceImpl implements AuthService {
      * @return authentication DTO
      */
     @Override
-    public AuthenticationDTO mapAuthenticationDTO(User user)
-    {
+    public AuthenticationDTO mapAuthenticationDTO(User user) {
         AuthenticationDTO authenticationDTO = new AuthenticationDTO();
         authenticationDTO.setUsername(user.getUsername());
         authenticationDTO.setEmail(user.getEmail());
