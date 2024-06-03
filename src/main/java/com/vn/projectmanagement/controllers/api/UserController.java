@@ -69,7 +69,7 @@ public class UserController extends BaseController {
     ) {
         Page<User> usersPage = userService.filterUsers(pageable, page, size);
         List<User> userList = usersPage.getContent();
-        return this.responseWithPageable(userList, usersPage.getPageable());
+        return this.responseWithPageable(userList, usersPage);
     }
 
     @Operation(summary = SwaggerMessages.UPDATE_USER)

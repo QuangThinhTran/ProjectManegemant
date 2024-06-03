@@ -1,6 +1,7 @@
 package com.vn.projectmanagement.controllers;
 
 import com.vn.projectmanagement.entity.response.*;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,12 +58,27 @@ public class BaseController {
         return ResponseEntity.status(status).body(responseDataMessageDTO);
     }
 
+    /**
+     * Response with data response entity.
+     *
+     * @param data - data to be returned
+     * @param status - status to be returned
+     * @return ResponseEntity<ResponseData>
+     */
     public ResponseEntity<ResponseData> responseWithData(Object data, HttpStatus status) {
         ResponseData responseDataDTO = new ResponseData(data, status);
         return ResponseEntity.status(status).body(responseDataDTO);
     }
 
-    public <T> ResponseEntity<ResponsePageable> responseWithPageable(List<T> data, Pageable pageable) {
+    /**
+     * Response with data response entity.
+     *
+     * @param data - data to be returned
+     * @param pageable - pageable to be returned
+     * @param <T>  - <T> to be returned
+     * @return ResponsePageable
+     */
+    public <T> ResponseEntity<ResponsePageable> responseWithPageable(List<T> data, Page<T> pageable) {
         ResponsePageable responsePageable = new ResponsePageable(data, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responsePageable);
     }

@@ -26,6 +26,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Role Controller", description = "These endpoints are used to perform actions on role.")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME) // Yêu cầu xác thực khi truy cập các endpoint trong controller này (đã được cấu hình trong SwaggerConfig)
 @RestController
@@ -54,7 +56,7 @@ public class RoleController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @GetMapping("/all")
-    public ResponseEntity<Object> getRoles() {
+    public ResponseEntity<List<Role>> getRoles() {
         return ResponseEntity.ok().body(roleRepository.findAll());
     }
 
