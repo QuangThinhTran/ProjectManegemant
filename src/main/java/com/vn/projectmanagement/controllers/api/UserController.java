@@ -67,7 +67,7 @@ public class UserController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @GetMapping("/detail/{email}")
-    public ResponseEntity<ResponseData> findUserByEmail(@PathVariable String email) {
+    public ResponseEntity<ResponseData<User>> findUserByEmail(@PathVariable String email) {
         User user = userService.findByEmail(email);
         return this.responseWithData(user, HttpStatus.OK);
     }
@@ -108,7 +108,7 @@ public class UserController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PutMapping("/update/{username}")
-    public ResponseEntity<ResponseDataMessage> update(
+    public ResponseEntity<ResponseDataMessage<AuthenticationDTO>> update(
             @PathVariable("username") String username,
             @Valid @RequestBody UpdateUserRequest userRequest,
             BindingResult bindingResult

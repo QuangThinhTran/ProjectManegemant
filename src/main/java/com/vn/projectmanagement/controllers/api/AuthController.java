@@ -68,7 +68,7 @@ public class AuthController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/register")
-    public ResponseEntity<ResponseAuth> register(
+    public ResponseEntity<ResponseAuth<AuthenticationDTO>> register(
             @Valid @RequestBody RegisterRequest registerRequest,
             BindingResult bindingResult
     ) {
@@ -102,7 +102,7 @@ public class AuthController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/login")
-    public ResponseEntity<ResponseAuth> login(
+    public ResponseEntity<ResponseAuth<AuthenticationDTO>> login(
             @Valid @RequestBody LoginRequest loginRequest,
             BindingResult bindingResult
     ) {

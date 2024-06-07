@@ -4,10 +4,10 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class ResponseDataMessage extends Response {
-    public Object data;
+public class ResponseDataMessage<T> extends Response {
+    public T data;
 
-    public ResponseDataMessage(Object data, String message, HttpStatus status) {
+    public ResponseDataMessage(T data, String message, HttpStatus status) {
         super(message, status);
         this.data = data;
     }

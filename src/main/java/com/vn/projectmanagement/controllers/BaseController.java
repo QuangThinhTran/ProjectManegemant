@@ -15,8 +15,8 @@ public class BaseController {
      * @return ResponseEntity<ResponseDTO>
      */
     public ResponseEntity<Response> responseSuccess(String message) {
-        Response responseDTO = new Response(message, HttpStatus.OK);
-        return ResponseEntity.ok().body(responseDTO);
+        Response response = new Response(message, HttpStatus.OK);
+        return ResponseEntity.ok().body(response);
     }
 
     /**
@@ -26,8 +26,8 @@ public class BaseController {
      * @return ResponseEntity<ResponseDTO>
      */
     public ResponseEntity<Response> responseCreated(String message) {
-        Response responseDTO = new Response(message, HttpStatus.CREATED);
-        return ResponseEntity.ok().body(responseDTO);
+        Response response = new Response(message, HttpStatus.CREATED);
+        return ResponseEntity.ok().body(response);
     }
 
     /**
@@ -39,13 +39,13 @@ public class BaseController {
      * @param token   - token to be returned
      * @return ResponseEntity<ResponseAuthDTO>
      */
-    public ResponseEntity<ResponseAuth> responseWithAuthData(
-            Object data,
+    public <T> ResponseEntity<ResponseAuth<T>> responseWithAuthData(
+            T data,
             String message,
             HttpStatus status,
             String token
     ) {
-        ResponseAuth responseAuthDTO = new ResponseAuth(data, message, status, token);
+        ResponseAuth<T> responseAuthDTO = new ResponseAuth<>(data, message, status, token);
         return ResponseEntity.status(status).body(responseAuthDTO);
     }
 
@@ -57,8 +57,8 @@ public class BaseController {
      * @param status  - status to be returned
      * @return ResponseEntity<ResponseDataDTO>
      */
-    public ResponseEntity<ResponseDataMessage> responseWithDataMessage(Object data, String message, HttpStatus status) {
-        ResponseDataMessage responseDataMessageDTO = new ResponseDataMessage(data, message, status);
+    public <T> ResponseEntity<ResponseDataMessage<T>> responseWithDataMessage(T data, String message, HttpStatus status) {
+        ResponseDataMessage<T> responseDataMessageDTO = new ResponseDataMessage<>(data, message, status);
         return ResponseEntity.status(status).body(responseDataMessageDTO);
     }
 
@@ -69,8 +69,8 @@ public class BaseController {
      * @param status - status to be returned
      * @return ResponseEntity<ResponseData>
      */
-    public ResponseEntity<ResponseData> responseWithData(Object data, HttpStatus status) {
-        ResponseData responseDataDTO = new ResponseData(data, status);
+    public <T> ResponseEntity<ResponseData<T>> responseWithData(T data, HttpStatus status) {
+        ResponseData<T> responseDataDTO = new ResponseData<>(data, status);
         return ResponseEntity.status(status).body(responseDataDTO);
     }
 

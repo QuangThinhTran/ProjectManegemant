@@ -2,6 +2,7 @@ package com.vn.projectmanagement.common.swagger;
 
 public class SwaggerMessages {
     // HTTP Status Messages
+    public static final String OK = "Request successful.";
     public static final String BAD_REQUEST = "Bad request. Please check the request parameters.";
     public static final String FORBIDDEN = "Access forbidden. You do not have permission to access this resource.";
     public static final String UNAUTHORIZED = "Unauthorized. Please provide valid credentials.";
