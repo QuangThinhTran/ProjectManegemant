@@ -1,5 +1,8 @@
 package com.vn.projectmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vn.projectmanagement.repositories.ImageRepository;
+import com.vn.projectmanagement.common.utils.SpringContext;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +24,7 @@ public class User extends BaseModel {
     private String email;
 
     @Column(name = "password")
+    @JsonIgnore
     private String password;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -40,5 +44,16 @@ public class User extends BaseModel {
 
     public String getRole() {
         return role.getName();
+    }
+
+    @Getter
+    @Transient
+    private String avatar;
+
+    @PostLoad
+    private void loadAvatar() {
+        ImageRepository imageRepository = SpringContext.getBean(ImageRepository.class);
+        Image avatar = imageRepository.findByEntityIdAndEntityType(this.getId(), this.getClass().getSimpleName());
+        this.avatar = avatar != null ? avatar.getPath() : null;
     }
 }
