@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -168,11 +170,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void uploadAvatar(String username, String pathFile) {
         User user = findByUsername(username);
+        Image imageCurrent = imageRepository.findByEntityIdAndEntityType(user.getId(), User.class.getSimpleName());
 
-        Image image = new Image();
-        image.setPath(pathFile);
-        image.setEntityId(user.getId());
-        image.setEntityType(User.class.getSimpleName());
-        imageRepository.save(image);
+        if (imageCurrent == null) {
+            Image imageNew = new Image();
+            imageNew.setPath(pathFile);
+            imageNew.setEntityId(user.getId());
+            imageNew.setEntityType(User.class.getSimpleName());
+            imageRepository.save(imageNew);
+        } else if (!Objects.equals(pathFile, imageCurrent.getPath())) {
+            imageCurrent.setPath(pathFile);
+            imageRepository.save(imageCurrent);
+        }
     }
 }
