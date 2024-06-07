@@ -26,4 +26,6 @@ public interface UserService {
     User update(String username, UpdateUserRequest updateUserRequest);
 
     void updatePassword(String username, UpdatePasswordRequest updatePasswordRequest);
+
+    void uploadAvatar(String username, String file);
 }

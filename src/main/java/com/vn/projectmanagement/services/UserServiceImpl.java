@@ -6,8 +6,10 @@ import com.vn.projectmanagement.entity.request.Auth.RegisterRequest;
 import com.vn.projectmanagement.entity.request.User.UpdatePasswordRequest;
 import com.vn.projectmanagement.entity.request.User.UpdateUserRequest;
 import com.vn.projectmanagement.exceptions.ApiRequestException;
+import com.vn.projectmanagement.models.Image;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;
+import com.vn.projectmanagement.repositories.ImageRepository;
 import com.vn.projectmanagement.repositories.UserRepository;
 import com.vn.projectmanagement.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,17 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ImageRepository imageRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            ImageRepository imageRepository
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.imageRepository = imageRepository;
     }
 
     /**
@@ -149,5 +157,22 @@ public class UserServiceImpl implements UserService {
         String password = this.passwordEncoder.encode(updatePasswordRequest.getNewPassword());
         user.setPassword(password);
         userRepository.save(user);
+    }
+
+    /**
+     * Upload avatar of a specific user
+     *
+     * @param username - username
+     * @param pathFile - path file
+     */
+    @Override
+    public void uploadAvatar(String username, String pathFile) {
+        User user = findByUsername(username);
+
+        Image image = new Image();
+        image.setPath(pathFile);
+        image.setEntityId(user.getId());
+        image.setEntityType(User.class.getSimpleName());
+        imageRepository.save(image);
     }
 }

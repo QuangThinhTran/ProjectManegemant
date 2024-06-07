@@ -82,8 +82,8 @@ public class BaseController {
      * @param <T>      - <T> to be returned
      * @return ResponsePageable
      */
-    public <T> ResponseEntity<ResponsePageable> responseWithPageable(List<T> data, Page<T> pageable) {
-        ResponsePageable responsePageable = new ResponsePageable(data, pageable);
+    public <T> ResponseEntity<ResponsePageable<T>> responseWithPageable(List<T> data, Page<T> pageable) {
+        ResponsePageable<T> responsePageable = new ResponsePageable<>(data, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responsePageable);
     }
 }

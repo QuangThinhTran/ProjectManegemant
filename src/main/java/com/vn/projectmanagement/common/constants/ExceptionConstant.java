@@ -13,4 +13,8 @@ public class ExceptionConstant {
     // User
     public static final String USER_NOT_FOUND = "User not found";
 
+
+    // File
+    public static final String FILE_IS_EMPTY = "File is empty";
+    public static final String FILE_IS_INVALID = "Invalid format file";
 }

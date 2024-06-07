@@ -43,4 +43,8 @@ public class SwaggerMessages {
     public static final String CHANGE_PASSWORD_MESSAGE =  "{\"message\": \"" + SwaggerMessages.CHANGE_PASSWORD + "\"}";
     public static final String UPDATE_USER_MESSAGE =  "{\"message\": \"" + SwaggerMessages.UPDATE_USER + "\"}";
     public static final String DELETE_USER_MESSAGE =  "{\"message\": \"" + SwaggerMessages.DELETE_USER + "\"}";
+
+    // File Messages
+    public static final String UPLOAD_FILE = "Upload file successfully";
+    public static final String UPLOAD_FILE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.UPLOAD_FILE + "\"}";
 }

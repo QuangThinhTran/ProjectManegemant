@@ -4,6 +4,7 @@ import com.vn.projectmanagement.common.constants.PathConstants;
 import com.vn.projectmanagement.common.swagger.SwaggerHelper;
 import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
+import com.vn.projectmanagement.common.utils.UploadFile;
 import com.vn.projectmanagement.config.SwaggerConfig;
 import com.vn.projectmanagement.controllers.BaseController;
 import com.vn.projectmanagement.entity.dto.AuthenticationDTO;
@@ -30,7 +31,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "User Controller", description = "These endpoints are used to perform actions on user.")
@@ -41,10 +44,12 @@ public class UserController extends BaseController {
 
     private final UserService userService;
     private final AuthService authService;
+    private final UploadFile uploadFile;
 
-    public UserController(UserService userService, AuthService authService) {
+    public UserController(UserService userService, AuthService authService, UploadFile uploadFile) {
         this.userService = userService;
         this.authService = authService;
+        this.uploadFile = uploadFile;
     }
 
     /**
@@ -76,7 +81,7 @@ public class UserController extends BaseController {
      * @return - Response entity with list of users
      */
     @GetMapping("/list")
-    public ResponseEntity<ResponsePageable> findAllUsers(
+    public ResponseEntity<ResponsePageable<User>> findAllUsers(
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "0") int page,
             Pageable pageable
@@ -137,5 +142,31 @@ public class UserController extends BaseController {
     ) {
         this.userService.updatePassword(username, updatePasswordRequest);
         return this.responseSuccess(SwaggerMessages.CHANGE_PASSWORD);
+    }
+
+    /**
+     * Upload avatar of user
+     *
+     * @param file     - File to be uploaded
+     * @param username - Username of user
+     * @return - Response entity with success message
+     * @throws IOException - Throws exception if file is not found
+     */
+    @Operation(summary = SwaggerMessages.UPLOAD_FILE)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.UPLOAD_FILE_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON)),
+            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
+    })
+    @PostMapping(value = "/upload-avatar/{username}", consumes = "multipart/form-data")
+    public ResponseEntity<Response> uploadAvatar(
+            @RequestPart("file") MultipartFile file,
+            @PathVariable("username") String username
+    ) throws IOException {
+        String pathFile = uploadFile.uploadFile(file);
+        this.userService.uploadAvatar(username, pathFile);
+        return this.responseSuccess(SwaggerMessages.UPLOAD_FILE);
     }
 }
