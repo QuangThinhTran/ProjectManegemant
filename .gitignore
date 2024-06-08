@@ -37,4 +37,9 @@ out/
 ### VS Code ###
 .vscode/
 
+### File ###
 uploads/*
+
+### Logs ###
+src/main/resources/logs/error/*
+src/main/resources/logs/infor/*

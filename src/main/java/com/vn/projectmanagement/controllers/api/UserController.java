@@ -14,6 +14,7 @@ import com.vn.projectmanagement.entity.response.ResponseDataMessage;
 import com.vn.projectmanagement.entity.request.User.UpdatePasswordRequest;
 import com.vn.projectmanagement.entity.request.User.UpdateUserRequest;
 import com.vn.projectmanagement.entity.response.ResponsePageable;
+import com.vn.projectmanagement.exceptions.ApiRequestException;
 import com.vn.projectmanagement.models.User;
 import com.vn.projectmanagement.services.interfaces.AuthService;
 import com.vn.projectmanagement.services.interfaces.UserService;
@@ -25,6 +26,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -45,6 +48,7 @@ public class UserController extends BaseController {
     private final UserService userService;
     private final AuthService authService;
     private final UploadFile uploadFile;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserService userService, AuthService authService, UploadFile uploadFile) {
         this.userService = userService;
@@ -86,9 +90,14 @@ public class UserController extends BaseController {
             @RequestParam(defaultValue = "0") int page,
             Pageable pageable
     ) {
-        Page<User> usersPage = userService.filterUsers(pageable, page, size);
-        List<User> userList = usersPage.getContent();
-        return this.responseWithPageable(userList, usersPage);
+        try {
+            Page<User> usersPage = userService.filterUsers(pageable, page, size);
+            List<User> userList = usersPage.getContent();
+            return this.responseWithPageable(userList, usersPage);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -113,9 +122,16 @@ public class UserController extends BaseController {
             @Valid @RequestBody UpdateUserRequest userRequest,
             BindingResult bindingResult
     ) {
-        User user = this.userService.update(username, userRequest);
-        AuthenticationDTO authenticationDTO = this.authService.mapAuthenticationDTO(user);
-        return this.responseWithDataMessage(authenticationDTO, SwaggerMessages.UPDATE_ROLE, HttpStatus.OK);
+        try {
+            User user = this.userService.update(username, userRequest);
+            AuthenticationDTO authenticationDTO = this.authService.mapAuthenticationDTO(user);
+            return this.responseWithDataMessage(authenticationDTO, SwaggerMessages.UPDATE_ROLE, HttpStatus.OK);
+        } catch (ApiRequestException e) {
+            throw new ApiRequestException(e.getMessage(), e.getStatus());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -140,8 +156,15 @@ public class UserController extends BaseController {
             @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest,
             BindingResult bindingResult
     ) {
-        this.userService.updatePassword(username, updatePasswordRequest);
-        return this.responseSuccess(SwaggerMessages.CHANGE_PASSWORD);
+        try {
+            this.userService.updatePassword(username, updatePasswordRequest);
+            return this.responseSuccess(SwaggerMessages.CHANGE_PASSWORD);
+        } catch (ApiRequestException e) {
+            throw new ApiRequestException(e.getMessage(), e.getStatus());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -150,7 +173,6 @@ public class UserController extends BaseController {
      * @param file     - File to be uploaded
      * @param username - Username of user
      * @return - Response entity with success message
-     * @throws IOException - Throws exception if file is not found
      */
     @Operation(summary = SwaggerMessages.UPLOAD_FILE)
     @ApiResponses(value = {
@@ -164,9 +186,16 @@ public class UserController extends BaseController {
     public ResponseEntity<Response> uploadAvatar(
             @RequestPart("file") MultipartFile file,
             @PathVariable("username") String username
-    ) throws IOException {
-        String pathFile = uploadFile.uploadFile(file);
-        this.userService.uploadAvatar(username, pathFile);
-        return this.responseSuccess(SwaggerMessages.UPLOAD_FILE);
+    ) {
+        try {
+            String pathFile = uploadFile.uploadFile(file);
+            this.userService.uploadAvatar(username, pathFile);
+            return this.responseSuccess(SwaggerMessages.UPLOAD_FILE);
+        } catch (ApiRequestException e) {
+            throw new ApiRequestException(e.getMessage(), e.getStatus());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
