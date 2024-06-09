@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Success</title>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Welcome to Our Service!</h1>
+    </div>
+    <div class="content">
+        <h2>Registration Successful!!!</h2>
+        <p th:text="'Dear, ' +  ${email}"></p>
+        <p>Thank you for registering with us. Your account has been successfully created. We are excited to have you on board!</p>
+        <p>To get started, click the button below to log in to your account:</p>
+        <a th:href="@{http://127.0.0.1:8080/api/auth/login}" class="button">Log in to your account</a>
+    </div>
+</div>
+</body>
+</html>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+    body {
+        font-family: 'Raleway', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        color: #ffffff;
+        padding: 40px 30px;
+        text-align: center;
+    }
+    .header h1 {
+        margin: 0;
+        font-size: 28px;
+    }
+    .content {
+        padding: 30px;
+        text-align: left;
+        color: #333333;
+        line-height: 1.6;
+    }
+    .content h2 {
+        color: #6e8efb;
+        margin-top: 0;
+    }
+    .content p {
+        margin: 15px 0;
+    }
+    .button {
+        display: inline-block;
+        background-color: #6e8efb;
+        color: #ffffff;
+        padding: 12px 25px;
+        text-decoration: none;
+        border-radius: 25px;
+        margin-top: 20px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+    .button:hover {
+        background-color: #a777e3;
+    }
+</style>
