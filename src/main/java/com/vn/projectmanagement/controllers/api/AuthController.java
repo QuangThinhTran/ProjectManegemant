@@ -89,6 +89,8 @@ public class AuthController extends BaseController {
             AuthenticationDTO user = authService.createUser(registerRequest, role);
             String token = this.authService.generateToken(user);
 
+            authService.sendMailRegistration(user);
+
             return this.responseWithAuthData(
                     user,
                     SwaggerMessages.REGISTRATION_SUCCESS_MESSAGE,

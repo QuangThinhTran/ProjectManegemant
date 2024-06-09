@@ -17,5 +17,7 @@ public interface AuthService {
 
     AuthenticationDTO mapAuthenticationDTO(User user);
 
+    void sendMailRegistration(AuthenticationDTO user);
+
     void logout();
 }

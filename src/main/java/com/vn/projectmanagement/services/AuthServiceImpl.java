@@ -9,6 +9,7 @@ import com.vn.projectmanagement.exceptions.ApiRequestException;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;
 import com.vn.projectmanagement.security.JWT.JwtTokenUtil;
+import com.vn.projectmanagement.services.email.MailService;
 import com.vn.projectmanagement.services.interfaces.AuthService;
 import com.vn.projectmanagement.services.interfaces.UserService;
 import org.springframework.http.HttpStatus;
@@ -18,20 +19,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final MailService mailService;
 
     public AuthServiceImpl(
             UserService userService,
             JwtTokenUtil jwtTokenUtil,
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            MailService mailService
     ) {
         this.userService = userService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.authenticationManager = authenticationManager;
+        this.mailService = mailService;
     }
 
     /**
@@ -96,6 +102,14 @@ public class AuthServiceImpl implements AuthService {
                     HttpStatus.BAD_REQUEST
             );
         }
+    }
+
+    @Override
+    public void sendMailRegistration(AuthenticationDTO user) {
+        Map<String, Object> attributes = Map.of(
+                "email", user.getEmail()
+        );
+        mailService.sendMail(user.getEmail(), "register-success", attributes);
     }
 
     /**
