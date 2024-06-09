@@ -43,3 +43,6 @@ uploads/*
 ### Logs ###
 src/main/resources/logs/error/*
 src/main/resources/logs/infor/*
+
+### Application Properties ###
+src/main/resources/application.properties
