@@ -10,4 +10,8 @@ class ProjectManagementApplicationTests {
     void contextLoads() {
     }
 
+    @Test
+    public void main() {
+        ProjectManagementApplication.main(new String[]{});
+    }
 }
