@@ -27,7 +27,7 @@ public class BaseController {
      */
     public ResponseEntity<Response> responseCreated(String message) {
         Response response = new Response(message, HttpStatus.CREATED);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     /**

@@ -116,7 +116,7 @@ public class RoleController extends BaseController {
     @PutMapping("/update")
     public ResponseEntity<Response> update(@Valid @RequestBody UpdateRoleRequest role, BindingResult bindingResult) {
         try {
-            roleService.checkRoleExist(role.getOldName());
+            roleService.checkRoleExist(role.getNewName());
             roleService.updateRole(role.getOldName(), role.getNewName());
             return this.responseSuccess(SwaggerMessages.UPDATE_ROLE);
         } catch (ApiRequestException e) {

@@ -108,7 +108,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should register failed return an error message when the username already exists")
     void shouldRegisterFailedReturnErrorMessageWhenUsernameAlreadyExists() throws Exception {
-        User user = userRepository.save(userFactory.create(role));
+        User user = userFactory.create(role);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername(user.getUsername());
@@ -135,7 +135,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should register failed return an error message when the email already exists")
     void shouldRegisterFailedReturnErrorMessageWhenEmailAlreadyExists() throws Exception {
-        User user = userRepository.save(userFactory.create(role));
+        User user = userFactory.create(role);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername(RandomStringUtils.randomAlphanumeric(10));
@@ -162,7 +162,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should register failed return an error message when the phone already exists")
     void shouldRegisterFailedReturnErrorMessageWhenPhoneAlreadyExists() throws Exception {
-        User user = userRepository.save(userFactory.create(role));
+        User user = userFactory.create(role);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername(RandomStringUtils.randomAlphanumeric(10));
@@ -214,7 +214,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should login successfully")
     void shouldLoginSuccessfully() throws Exception {
-        User user = userRepository.save(userFactory.create(role));
+        User user = userFactory.create(role);
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(user.getUsername());
         loginRequest.setPassword(password);
@@ -240,7 +240,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should login failed return an error message when the username is not valid")
     void shouldLoginFailedReturnErrorMessageWhenUsernameIsNotValid() throws Exception {
-        User user = userRepository.save(userFactory.create(role));
+        User user = userFactory.create(role);
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(RandomStringUtils.randomAlphanumeric(10));
@@ -263,7 +263,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should login failed return an error message when the password is not valid")
     void shouldLoginFailedReturnErrorMessageWhenPasswordIsNotValid() throws Exception {
-        User user = userRepository.save(userFactory.create(role));
+        User user = userFactory.create(role);
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(user.getUsername());
