@@ -19,14 +19,18 @@ public class UserFactory {
         this.userRepository = userRepository;
     }
 
-    public User create(Role role) {
+    public User create(Role role, int i) {
 
         User user = new User();
-        user.setUsername(RandomStringUtils.randomAlphanumeric(10));
+        user.setUsername("User " + i);
         user.setEmail(RandomStringUtils.randomAlphanumeric(10) + "@example.com");
         user.setPhone(RandomStringUtils.randomNumeric(10));
         user.setPassword(passwordEncoder.encode("123456"));
         user.setRole(role);
         return userRepository.save(user);
+    }
+
+    public void delete() {
+        userRepository.deleteAll();
     }
 }

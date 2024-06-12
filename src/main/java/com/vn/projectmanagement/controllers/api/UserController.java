@@ -125,7 +125,7 @@ public class UserController extends BaseController {
         try {
             User user = this.userService.update(username, userRequest);
             AuthenticationDTO authenticationDTO = this.authService.mapAuthenticationDTO(user);
-            return this.responseWithDataMessage(authenticationDTO, SwaggerMessages.UPDATE_ROLE, HttpStatus.OK);
+            return this.responseWithDataMessage(authenticationDTO, SwaggerMessages.UPDATE_USER, HttpStatus.OK);
         } catch (ApiRequestException e) {
             throw new ApiRequestException(e.getMessage(), e.getStatus());
         } catch (Exception e) {

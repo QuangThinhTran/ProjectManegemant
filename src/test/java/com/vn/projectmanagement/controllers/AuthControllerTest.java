@@ -6,6 +6,7 @@ import com.vn.projectmanagement.common.constants.ValidationConstants;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.entity.request.Auth.LoginRequest;
 import com.vn.projectmanagement.entity.request.Auth.RegisterRequest;
+import com.vn.projectmanagement.factory.RoleFactory;
 import com.vn.projectmanagement.factory.UserFactory;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;
@@ -41,16 +42,10 @@ public class AuthControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserFactory userFactory;
 
     @Autowired
-    private AuthService authService;
+    private RoleFactory roleFactory;
 
     private String password;
     private Role role;
@@ -59,15 +54,13 @@ public class AuthControllerTest {
     public void setUp() {
         this.password = "123456";
 
-        role = new Role();
-        role.setName("ROLE_USER");
-        roleRepository.save(role);
+        role = roleFactory.create(1);
     }
 
     @AfterEach
     public void tearDown() {
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
+        roleFactory.delete();
+        userFactory.delete();
     }
 
     /**
@@ -108,7 +101,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should register failed return an error message when the username already exists")
     void shouldRegisterFailedReturnErrorMessageWhenUsernameAlreadyExists() throws Exception {
-        User user = userFactory.create(role);
+        User user = userFactory.create(role, 1);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername(user.getUsername());
@@ -135,7 +128,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should register failed return an error message when the email already exists")
     void shouldRegisterFailedReturnErrorMessageWhenEmailAlreadyExists() throws Exception {
-        User user = userFactory.create(role);
+        User user = userFactory.create(role, 1);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername(RandomStringUtils.randomAlphanumeric(10));
@@ -162,7 +155,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should register failed return an error message when the phone already exists")
     void shouldRegisterFailedReturnErrorMessageWhenPhoneAlreadyExists() throws Exception {
-        User user = userFactory.create(role);
+        User user = userFactory.create(role, 1);
 
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername(RandomStringUtils.randomAlphanumeric(10));
@@ -214,7 +207,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should login successfully")
     void shouldLoginSuccessfully() throws Exception {
-        User user = userFactory.create(role);
+        User user = userFactory.create(role, 1);
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(user.getUsername());
         loginRequest.setPassword(password);
@@ -240,7 +233,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should login failed return an error message when the username is not valid")
     void shouldLoginFailedReturnErrorMessageWhenUsernameIsNotValid() throws Exception {
-        User user = userFactory.create(role);
+        User user = userFactory.create(role, 1);
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(RandomStringUtils.randomAlphanumeric(10));
@@ -263,7 +256,7 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Should login failed return an error message when the password is not valid")
     void shouldLoginFailedReturnErrorMessageWhenPasswordIsNotValid() throws Exception {
-        User user = userFactory.create(role);
+        User user = userFactory.create(role, 1);
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(user.getUsername());

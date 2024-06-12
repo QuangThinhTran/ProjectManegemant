@@ -27,7 +27,7 @@ public class User extends BaseModel {
     @JsonIgnore
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
