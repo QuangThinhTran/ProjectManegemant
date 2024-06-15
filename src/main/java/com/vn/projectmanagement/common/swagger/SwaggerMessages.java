@@ -12,7 +12,8 @@ public class SwaggerMessages {
     public static final String BAD_REQUEST_MESSAGE = "{\"message\": \"" + SwaggerMessages.BAD_REQUEST + "\"}";
     public static final String FORBIDDEN_MESSAGE = "{\"message\": \"" + SwaggerMessages.FORBIDDEN + "\"}";
     public static final String UNAUTHORIZED_MESSAGE = "{\"message\": \"" + SwaggerMessages.UNAUTHORIZED + "\"}";
-    public static final String INTERNAL_SERVER_ERROR_MESSAGE = "{\"message\": \"" + SwaggerMessages.INTERNAL_SERVER_ERROR + "\"}";
+    public static final String INTERNAL_SERVER_ERROR_MESSAGE =
+            "{\"message\": \"" + SwaggerMessages.INTERNAL_SERVER_ERROR + "\"}";
 
     // Registration Messages
     public static final String REGISTRATION_SUCCESS_MESSAGE = "Account registration successful.";
@@ -30,22 +31,28 @@ public class SwaggerMessages {
     public static final String CREATE_ROLE = "Create role successfully";
     public static final String UPDATE_ROLE = "Update role successfully";
     public static final String DELETE_ROLE = "Delete role successfully";
-    public static final String CREATE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.CREATE_ROLE + "\"}";
-    public static final String UPDATE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.UPDATE_ROLE + "\"}";
-    public static final String DELETE_ROLE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.DELETE_ROLE + "\"}";
+    public static final String CREATE_ROLE_MESSAGE = "{\"message\": \"" + SwaggerMessages.CREATE_ROLE + "\"}";
+    public static final String UPDATE_ROLE_MESSAGE = "{\"message\": \"" + SwaggerMessages.UPDATE_ROLE + "\"}";
+    public static final String DELETE_ROLE_MESSAGE = "{\"message\": \"" + SwaggerMessages.DELETE_ROLE + "\"}";
 
     // User Messages
     public static final String GET_ALL_USERS = "Get all users";
-    public static final String GET_USER_BY_USERNAME = "Get user by username";
+    public static final String GET_USER_BY_EMAIL = "Get user by email";
     public static final String CHANGE_PASSWORD = "Change password successfully";
     public static final String UPDATE_USER = "Update profile user successfully";
-    public static final String DELETE_USER = "Delete user successfully";
-    public static final String GET_USER_BY_USERNAME_MESSAGE =  "{\"message\": \"" + SwaggerMessages.GET_USER_BY_USERNAME + "\"}";
-    public static final String CHANGE_PASSWORD_MESSAGE =  "{\"message\": \"" + SwaggerMessages.CHANGE_PASSWORD + "\"}";
-    public static final String UPDATE_USER_MESSAGE =  "{\"message\": \"" + SwaggerMessages.UPDATE_USER + "\"}";
-    public static final String DELETE_USER_MESSAGE =  "{\"message\": \"" + SwaggerMessages.DELETE_USER + "\"}";
-
+    public static final String CHANGE_PASSWORD_MESSAGE = "{\"message\": \"" + SwaggerMessages.CHANGE_PASSWORD + "\"}";
+    public static final String UPDATE_USER_MESSAGE = "{\"message\": \"" + SwaggerMessages.UPDATE_USER + "\"}";
     // File Messages
     public static final String UPLOAD_FILE = "Upload file successfully";
-    public static final String UPLOAD_FILE_MESSAGE =  "{\"message\": \"" + SwaggerMessages.UPLOAD_FILE + "\"}";
+    public static final String UPLOAD_FILE_MESSAGE = "{\"message\": \"" + SwaggerMessages.UPLOAD_FILE + "\"}";
+
+    // Project Messages
+    public static final String CREATE_PROJECT = "Create project successfully";
+    public static final String UPDATE_PROJECT = "Update project successfully";
+    public static final String DELETE_PROJECT = "Delete project successfully";
+    public static final String GET_ALL_PROJECTS = "Get all projects";
+    public static final String GET_PROJECT_BY_TITLE = "Get project by title";
+    public static final String CREATE_PROJECT_MESSAGE = "{\"message\": \"" + SwaggerMessages.CREATE_PROJECT + "\"}";
+    public static final String UPDATE_PROJECT_MESSAGE = "{\"message\": \"" + SwaggerMessages.UPDATE_PROJECT + "\"}";
+    public static final String DELETE_PROJECT_MESSAGE = "{\"message\": \"" + SwaggerMessages.DELETE_PROJECT + "\"}";
 }

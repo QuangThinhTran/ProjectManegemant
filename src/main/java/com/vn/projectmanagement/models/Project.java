@@ -17,10 +17,10 @@ public class Project extends BaseModel{
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<Task> taskList;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_projects",
             joinColumns = @JoinColumn(name = "project_id"),
