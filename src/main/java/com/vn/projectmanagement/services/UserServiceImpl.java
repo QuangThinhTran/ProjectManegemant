@@ -120,8 +120,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> filterUsers(Pageable pageable, int page, int size) {
-        return this.userRepository.listUser(PageRequest.of(page, size));
+    public Page<User> filterUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return this.userRepository.listUser(pageable);
     }
 
     /**

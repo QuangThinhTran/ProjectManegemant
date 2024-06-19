@@ -81,7 +81,6 @@ public class UserController extends BaseController {
      *
      * @param size     - Number of records per page
      * @param page     - Page number
-     * @param pageable - Pageable object
      * @return - Response entity with list of users
      */
     @Operation(summary = SwaggerMessages.GET_ALL_USERS, tags = {"User Controller"})
@@ -95,11 +94,10 @@ public class UserController extends BaseController {
     @GetMapping("/list")
     public ResponseEntity<ResponsePageable<User>> findAllUsers(
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "0") int page,
-            Pageable pageable
+            @RequestParam(defaultValue = "0") int page
     ) {
         try {
-            Page<User> usersPage = userService.filterUsers(pageable, page, size);
+            Page<User> usersPage = userService.filterUsers(page, size);
             return this.responseWithPageable(usersPage.getContent(), usersPage);
         } catch (Exception e) {
             logger.error(e.getMessage());

@@ -21,7 +21,7 @@ public interface UserService {
 
     void checkPhoneExist(String phone);
 
-    Page<User> filterUsers(Pageable pageable, int page, int size);
+    Page<User> filterUsers(int page, int size);
 
     User update(String username, UpdateUserRequest updateUserRequest);
 

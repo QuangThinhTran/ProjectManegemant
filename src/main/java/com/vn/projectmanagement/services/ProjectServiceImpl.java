@@ -8,6 +8,7 @@ import com.vn.projectmanagement.repositories.ProjectRepository;
 import com.vn.projectmanagement.services.interfaces.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,8 @@ public class ProjectServiceImpl implements ProjectService {
      * @return Page<Project>
      */
     @Override
-    public Page<Project> listProjects(Pageable pageable, int page, int size) {
+    public Page<Project> listProjects(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return projectRepository.findAll(pageable);
     }
 

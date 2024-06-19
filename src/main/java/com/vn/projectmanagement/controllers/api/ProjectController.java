@@ -51,7 +51,6 @@ public class ProjectController extends BaseController {
      *
      * @param page     - page number
      * @param size     - size of page
-     * @param pageable - pageable
      * @return ResponseEntity<ResponsePageable < Project>>
      */
     @Operation(summary = SwaggerMessages.GET_ALL_PROJECTS, tags = {"Project Controller"})
@@ -65,11 +64,10 @@ public class ProjectController extends BaseController {
     @GetMapping("/list")
     public ResponseEntity<ResponsePageable<Project>> listProjects(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            Pageable pageable
+            @RequestParam(defaultValue = "10") int size
     ) {
         try {
-            Page<Project> projects = projectService.listProjects(pageable, page, size);
+            Page<Project> projects = projectService.listProjects(page, size);
             return responseWithPageable(projects.getContent(), projects);
         } catch (Exception e) {
             logger.error(e.getMessage());
