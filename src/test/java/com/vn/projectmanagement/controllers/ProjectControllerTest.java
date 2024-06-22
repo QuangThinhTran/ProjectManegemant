@@ -49,7 +49,6 @@ public class ProjectControllerTest {
         projectFactory.deleteAll();
     }
 
-
     /**
      * Test get all projects
      *

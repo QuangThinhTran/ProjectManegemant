@@ -1,5 +1,7 @@
 package com.vn.projectmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.vn.projectmanagement.entity.view.View;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +12,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "projects")
+@JsonView({View.UserView.class, View.ProjectView.class})
 public class Project extends BaseModel{
     @Column(name = "title")
     private String title;

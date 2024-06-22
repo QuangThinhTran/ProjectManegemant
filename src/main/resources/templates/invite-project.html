@@ -12,9 +12,9 @@
     </div>
     <div class="content">
         <h2>Invite to Project</h2>
-        <p>Dear [Recipient's Name],</p>
-        <p>You have been invited to join the project "[Project Name]".</p>
-        <p>Descriptions : </p>
+        <p th:text="'Dear ' + ${email} "></p>
+        <p th:text="'You have been invited to join the project ' + ${project.title}"></p>
+        <p th:text="'Descriptions : ' + ${project.description}"> </p>
     </div>
 </div>
 </body>

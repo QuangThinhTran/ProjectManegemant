@@ -52,7 +52,11 @@ public class SwaggerMessages {
     public static final String DELETE_PROJECT = "Delete project successfully";
     public static final String GET_ALL_PROJECTS = "Get all projects";
     public static final String GET_PROJECT_BY_TITLE = "Get project by title";
+    public static final String INVITE_STAFF = "Staff invited successfully to the project";
+    public static final String REMOVE_STAFF = "Staff removed successfully from the project";
     public static final String CREATE_PROJECT_MESSAGE = "{\"message\": \"" + SwaggerMessages.CREATE_PROJECT + "\"}";
     public static final String UPDATE_PROJECT_MESSAGE = "{\"message\": \"" + SwaggerMessages.UPDATE_PROJECT + "\"}";
     public static final String DELETE_PROJECT_MESSAGE = "{\"message\": \"" + SwaggerMessages.DELETE_PROJECT + "\"}";
+    public static final String INVITE_STAFF_MESSAGE = "{\"message\": \"" + SwaggerMessages.INVITE_STAFF + "\"}";
+    public static final String REMOVE_STAFF_MESSAGE = "{\"message\": \"" + SwaggerMessages.REMOVE_STAFF + "\"}";
 }

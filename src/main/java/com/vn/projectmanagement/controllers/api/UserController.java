@@ -1,5 +1,6 @@
 package com.vn.projectmanagement.controllers.api;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.vn.projectmanagement.common.constants.PathConstants;
 import com.vn.projectmanagement.common.swagger.SwaggerHelper;
 import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
@@ -14,6 +15,7 @@ import com.vn.projectmanagement.entity.response.ResponseDataMessage;
 import com.vn.projectmanagement.entity.request.User.UpdatePasswordRequest;
 import com.vn.projectmanagement.entity.request.User.UpdateUserRequest;
 import com.vn.projectmanagement.entity.response.ResponsePageable;
+import com.vn.projectmanagement.entity.view.View;
 import com.vn.projectmanagement.exceptions.ApiRequestException;
 import com.vn.projectmanagement.models.User;
 import com.vn.projectmanagement.services.interfaces.AuthService;
@@ -70,6 +72,7 @@ public class UserController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
+    @JsonView(View.UserView.class)
     @GetMapping("/detail/{email}")
     public ResponseEntity<ResponseData<User>> findUserByEmail(@PathVariable String email) {
         User user = userService.findByEmail(email);
@@ -91,6 +94,7 @@ public class UserController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
+    @JsonView(View.UserView.class)
     @GetMapping("/list")
     public ResponseEntity<ResponsePageable<User>> findAllUsers(
             @RequestParam(defaultValue = "10") int size,

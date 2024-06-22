@@ -1,6 +1,8 @@
 package com.vn.projectmanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.vn.projectmanagement.entity.view.View;
 import com.vn.projectmanagement.repositories.ImageRepository;
 import com.vn.projectmanagement.common.utils.SpringContext;
 import jakarta.persistence.*;
@@ -13,6 +15,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "users")
+@JsonView({View.UserView.class, View.ProjectView.class})
 public class User extends BaseModel {
     @Column(name = "username")
     private String username;
@@ -34,7 +37,7 @@ public class User extends BaseModel {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private List<Task> taskList;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_projects",
             joinColumns = @JoinColumn(name = "user_id"),
