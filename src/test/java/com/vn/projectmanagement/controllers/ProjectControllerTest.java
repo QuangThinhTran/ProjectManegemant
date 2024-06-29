@@ -2,9 +2,14 @@ package com.vn.projectmanagement.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
+import com.vn.projectmanagement.entity.request.Project.InviteStaffRequest;
 import com.vn.projectmanagement.entity.request.Project.ProjectRequest;
 import com.vn.projectmanagement.factory.ProjectFactory;
+import com.vn.projectmanagement.factory.RoleFactory;
+import com.vn.projectmanagement.factory.UserFactory;
 import com.vn.projectmanagement.models.Project;
+import com.vn.projectmanagement.models.Role;
+import com.vn.projectmanagement.models.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,10 +40,20 @@ public class ProjectControllerTest {
     @Autowired
     private ProjectFactory projectFactory;
 
+    @Autowired
+    private UserFactory userFactory;
+
+    @Autowired
+    private RoleFactory roleFactory;
+
     private Project project;
+    private User user;
 
     @BeforeEach
     public void setUp() {
+        Role role = roleFactory.create(1);
+        user = userFactory.create(role, 1);
+
         for (int i = 1; i <= 2; i++) {
             project = projectFactory.createProject(i);
         }
@@ -84,7 +99,8 @@ public class ProjectControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(project.getTitle()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.description").value(project.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.OK.value()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(SwaggerMessages.OK));;
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(SwaggerMessages.OK));
+        ;
     }
 
     /**
@@ -101,8 +117,8 @@ public class ProjectControllerTest {
         projectRequest.setDescription("Description 3");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/project/create")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(projectRequest)))
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(projectRequest)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.CREATED.value()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(SwaggerMessages.CREATE_PROJECT));
@@ -122,11 +138,51 @@ public class ProjectControllerTest {
         projectRequest.setDescription("Description 3");
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/project/update/" + this.project.getId())
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(projectRequest)))
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(projectRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(SwaggerMessages.UPDATE_PROJECT));
+    }
+
+    /**
+     * Test invite staff to project
+     *
+     * @throws Exception Test invite staff to project
+     */
+    @Test
+    @DisplayName("Test invite user to project")
+    @WithMockUser
+    public void testInviteUserToProject() throws Exception {
+        InviteStaffRequest inviteStaffRequest = new InviteStaffRequest();
+        inviteStaffRequest.setProjectID(this.project.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/project/invite-staff/" + this.user.getEmail())
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(inviteStaffRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.OK.value()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(SwaggerMessages.INVITE_STAFF));
+    }
+
+    /**
+     * Test remove user from project
+     *
+     * @throws Exception Test remove user from project
+     */
+    @Test
+    @DisplayName("Test remove user from project")
+    @WithMockUser
+    public void testRemoveUserFromProject() throws Exception {
+        InviteStaffRequest inviteStaffRequest = new InviteStaffRequest();
+        inviteStaffRequest.setProjectID(this.project.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/project/remove-staff/" + this.user.getEmail())
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(inviteStaffRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.OK.value()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(SwaggerMessages.REMOVE_STAFF));
     }
 
     /**
