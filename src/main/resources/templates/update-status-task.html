@@ -13,7 +13,7 @@
     <div class="content">
         <h2>Project Task Status Update</h2>
         <p>Dear Team,</p>
-        <p>The task of the project "<strong>[Project Name]</strong>" has been updated, and its status is now <strong>Approved</strong>.</p>
+        <p th:with="message='The task ' + ${task.title} + ' of the project ' + '<strong>' + ${project.title} +  '</strong> has been updated, and its status is now ' + ${task.status}" th:text="${message}"></p>
         <p>Please review the updated status and proceed with the necessary actions accordingly.</p>
     </div>
 </div>
