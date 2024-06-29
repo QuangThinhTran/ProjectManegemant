@@ -1,11 +1,11 @@
 package com.vn.projectmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.Random;
 
 @Getter
 @Setter
@@ -25,18 +25,14 @@ public class Task extends BaseModel{
     private String status;
 
     @Column(name = "expiration_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date expirationDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    public void setTaskCode() {
-        Random random = new Random(6);
-        this.taskCode = random.toString();
-    }
 }

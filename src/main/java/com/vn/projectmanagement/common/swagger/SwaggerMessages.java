@@ -59,4 +59,18 @@ public class SwaggerMessages {
     public static final String DELETE_PROJECT_MESSAGE = "{\"message\": \"" + SwaggerMessages.DELETE_PROJECT + "\"}";
     public static final String INVITE_STAFF_MESSAGE = "{\"message\": \"" + SwaggerMessages.INVITE_STAFF + "\"}";
     public static final String REMOVE_STAFF_MESSAGE = "{\"message\": \"" + SwaggerMessages.REMOVE_STAFF + "\"}";
+
+    // Task Messages
+    public static final String CREATE_TASK = "Create task successfully";
+    public static final String UPDATE_TASK = "Update task successfully";
+    public static final String DELETE_TASK = "Delete task successfully";
+    public static final String GET_ALL_TASKS = "Get all tasks";
+    public static final String GET_TASK_BY_CODE = "Get task by code";
+    public static final String UPDATE_STATUS_TASK = "Update status task successfully";
+    public static final String ASSIGN_TASK = "Assign task to user successfully";
+    public static final String CREATE_TASK_MESSAGE = "{\"message\": \"" + SwaggerMessages.CREATE_TASK + "\"}";
+    public static final String UPDATE_TASK_MESSAGE = "{\"message\": \"" + SwaggerMessages.UPDATE_TASK + "\"}";
+    public static final String DELETE_TASK_MESSAGE = "{\"message\": \"" + SwaggerMessages.DELETE_TASK + "\"}";
+    public static final String UPDATE_STATUS_TASK_MESSAGE = "{\"message\": \"" + SwaggerMessages.UPDATE_STATUS_TASK + "\"}";
+    public static final String ASSIGN_TASK_MESSAGE = "{\"message\": \"" + SwaggerMessages.ASSIGN_TASK + "\"}";
 }

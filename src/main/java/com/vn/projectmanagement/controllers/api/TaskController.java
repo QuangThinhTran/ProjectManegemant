@@ -1,22 +1,21 @@
 package com.vn.projectmanagement.controllers.api;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.vn.projectmanagement.common.constants.PathConstants;
-import com.vn.projectmanagement.common.constants.ValidationConstants;
 import com.vn.projectmanagement.common.swagger.SwaggerHelper;
 import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.config.SwaggerConfig;
 import com.vn.projectmanagement.controllers.BaseController;
-import com.vn.projectmanagement.entity.request.Project.InviteStaffRequest;
-import com.vn.projectmanagement.entity.request.Project.ProjectRequest;
+import com.vn.projectmanagement.entity.request.Task.AssignTaskRequest;
+import com.vn.projectmanagement.entity.request.Task.TaskRequest;
+import com.vn.projectmanagement.entity.request.Task.UpdateStatusTaskRequest;
 import com.vn.projectmanagement.entity.response.Response;
 import com.vn.projectmanagement.entity.response.ResponseData;
 import com.vn.projectmanagement.entity.response.ResponsePageable;
 import com.vn.projectmanagement.exceptions.ApiRequestException;
-import com.vn.projectmanagement.models.Project;
+import com.vn.projectmanagement.models.Task;
 import com.vn.projectmanagement.models.User;
-import com.vn.projectmanagement.services.interfaces.ProjectService;
+import com.vn.projectmanagement.services.interfaces.TaskService;
 import com.vn.projectmanagement.services.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,47 +33,51 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import java.sql.SQLException;
 
-@Tag(name = "Project Controller", description = "These endpoints are used to perform actions on Project")
+@Tag(name = "Task Controller", description = "These endpoints are used to perform actions on Task")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
 @RestController
-@RequestMapping(PathConstants.API_PROJECT)
-public class ProjectController extends BaseController {
+@RequestMapping(PathConstants.API_TASK)
+public class TaskController extends BaseController {
 
-    private final ProjectService projectService;
+    private final TaskService taskService;
     private final UserService userService;
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     @Autowired
-    public ProjectController(ProjectService projectService, UserService userService) {
-        this.projectService = projectService;
+    public TaskController(TaskService taskService, UserService userService) {
+        this.taskService = taskService;
         this.userService = userService;
     }
 
     /**
-     * List projects response entity.
+     * Get all tasks
      *
-     * @param page - page number
-     * @param size - size of page
-     * @return ResponseEntity<ResponsePageable < Project>>
+     * @param status task status
+     * @param page page
+     * @param size size
+     * @return response
      */
-    @Operation(summary = SwaggerMessages.GET_ALL_PROJECTS, tags = {"Project Controller"})
+    @Operation(summary = SwaggerMessages.GET_ALL_TASKS, tags = {"Task Controller"})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Project.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Task.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
-    @GetMapping("/list")
-    public ResponseEntity<ResponsePageable<Project>> listProjects(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+    @GetMapping("/list-by-status/{status}")
+    public ResponseEntity<ResponsePageable<Task>> getFilterStatus(
+            @PathVariable String status,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int size
     ) {
         try {
-            Page<Project> projects = projectService.listProjects(page, size);
-            return responseWithPageable(projects.getContent(), projects);
+            System.out.println(status);
+            Page<Task> tasks = taskService.listTasks(status, page, size);
+            System.out.println(tasks);
+            return responseWithPageable(tasks.getContent(), tasks);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -82,28 +85,31 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * Create project response entity.
+     * Create task
      *
-     * @param projectRequest - project request
-     * @param bindingResult  - binding result
-     * @return ResponseEntity<Response>
+     * @param taskRequest task request
+     * @param bindingResult binding result
+     * @return response
      */
-    @Operation(summary = SwaggerMessages.CREATE_PROJECT, tags = {"Project Controller"})
+    @Operation(summary = SwaggerMessages.CREATE_TASK, tags = {"Task Controller"})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.CREATED, description = SwaggerMessages.CREATE_PROJECT_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Project.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.CREATED, description = SwaggerMessages.CREATE_TASK_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Task.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/create")
-    public ResponseEntity<Response> createProject(
-            @RequestBody ProjectRequest projectRequest,
+    public ResponseEntity<Response> createTask(
+            @RequestBody TaskRequest taskRequest,
             BindingResult bindingResult
     ) {
         try {
-            projectService.createProject(projectRequest);
-            return responseCreated(SwaggerMessages.CREATE_PROJECT);
+            taskService.createTask(taskRequest);
+
+            return responseCreated(SwaggerMessages.CREATE_TASK);
+        } catch (ApiRequestException e) {
+            throw new ApiRequestException(e.getMessage(), e.getStatus());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -111,57 +117,30 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * Get project by title response entity.
+     * Update task
      *
-     * @param title - title
-     * @return ResponseEntity<ResponseData < Project>>
+     * @param taskCode task code
+     * @param taskRequest task request
+     * @param bindingResult binding result
+     * @return response
      */
-    @Operation(summary = SwaggerMessages.GET_PROJECT_BY_TITLE, tags = {"Project Controller"})
+    @Operation(summary = SwaggerMessages.UPDATE_TASK, tags = {"Task Controller"})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Project.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.UPDATE_TASK_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Task.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
-    @GetMapping("/detail/{title}")
-    public ResponseEntity<ResponseData<Project>> getProjectByTitle(
-            @PathVariable String title
-    ) {
-        try {
-            Project project = projectService.getProjectByTitle(title);
-            return responseWithData(project, HttpStatus.OK);
-        } catch (ApiRequestException e) {
-            logger.error(e.getMessage());
-            throw new ApiRequestException(e.getMessage(), e.getStatus());
-        }
-    }
-
-    /**
-     * Update project response entity.
-     *
-     * @param id             - id
-     * @param projectRequest - project request
-     * @param bindingResult  - binding result
-     * @return ResponseEntity<Response>
-     */
-    @Operation(summary = SwaggerMessages.UPDATE_PROJECT, tags = {"Project Controller"})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.UPDATE_PROJECT_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Project.class))),
-            @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
-            @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
-            @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
-            @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
-    })
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Response> updateProject(
-            @PathVariable UUID id,
-            @RequestBody ProjectRequest projectRequest,
+    @PutMapping("/update/{taskCode}")
+    public ResponseEntity<Response> updateTask(
+            @PathVariable String taskCode,
+            @RequestBody TaskRequest taskRequest,
             BindingResult bindingResult
     ) {
         try {
-            projectService.updateProject(id, projectRequest);
-            return responseSuccess(SwaggerMessages.UPDATE_PROJECT);
+            taskService.updateTask(taskCode, taskRequest);
+            return responseSuccess(SwaggerMessages.UPDATE_TASK);
         } catch (ApiRequestException e) {
             throw new ApiRequestException(e.getMessage(), e.getStatus());
         } catch (Exception e) {
@@ -171,26 +150,35 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * Delete project response entity.
+     * Update status task
      *
-     * @param id - id
-     * @return ResponseEntity<Response>
+     * @param taskCode task code
+     * @param updateStatusTaskRequest update status task request
+     * @param bindingResult binding result
+     * @return response
      */
-    @Operation(summary = SwaggerMessages.DELETE_PROJECT, tags = {"Project Controller"})
+    @Operation(summary = SwaggerMessages.UPDATE_STATUS_TASK, tags = {"Task Controller"})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.DELETE_PROJECT_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Project.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.UPDATE_STATUS_TASK_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Task.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteProject(
-            @PathVariable UUID id
+    @PatchMapping("/update-status/{taskCode}")
+    public ResponseEntity<Response> updateStatusTask(
+            @PathVariable String taskCode,
+            @RequestBody UpdateStatusTaskRequest updateStatusTaskRequest,
+            BindingResult bindingResult
     ) {
         try {
-            projectService.deleteProject(projectService.getProjectById(id));
-            return responseSuccess(SwaggerMessages.DELETE_PROJECT);
+            Task task = taskService.findTaskByCode(taskCode);
+
+            taskService.updateStatus(task, updateStatusTaskRequest.getStatus());
+
+            taskService.sendMailUpdateStatus(task.getUser().getEmail(), task.getProject(), task);
+
+            return responseSuccess(SwaggerMessages.UPDATE_STATUS_TASK);
         } catch (ApiRequestException e) {
             throw new ApiRequestException(e.getMessage(), e.getStatus());
         } catch (Exception e) {
@@ -200,74 +188,79 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * Invite staff to project response entity.
+     * Assign task to user
      *
-     * @param email - email
-     * @param inviteStaffRequest - inviteStaffRequest
-     * @param bindingResult - bindingResult
-     * @return ResponseEntity<Response>
+     * @param email email
+     * @param assignTaskRequest assign task request
+     * @param bindingResult binding result
+     * @return response
      */
-    @Operation(summary = SwaggerMessages.INVITE_STAFF, tags = {"Project Controller"})
+    @Operation(summary = SwaggerMessages.ASSIGN_TASK, tags = {"Task Controller"})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.INVITE_STAFF_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Project.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.ASSIGN_TASK_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Task.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
-    @PostMapping("/invite-staff/{email}")
-    public ResponseEntity<Response> inviteStaffToProject(
+    @PatchMapping("/assign-task/{email}")
+    public ResponseEntity<Response> assignTaskToUser(
             @PathVariable String email,
-            @RequestBody InviteStaffRequest inviteStaffRequest,
+            @RequestBody AssignTaskRequest assignTaskRequest,
             BindingResult bindingResult
     ) {
         try {
             User user = userService.findByEmail(email);
-            Project project = projectService.getProjectById(inviteStaffRequest.getProjectID());
+            Task task = taskService.findTaskByCode(assignTaskRequest.getTaskCode());
 
-            if (!projectService.inviteStaffToProject(user, project)) {
-                return responseSuccess(user.getEmail() + ValidationConstants.IS_EXISTED);
-            }
-            projectService.sendMailInvitedStaff(email, project);
+            taskService.assignTaskToUser(task, user);
 
-            return responseSuccess(SwaggerMessages.INVITE_STAFF);
+            return responseSuccess(SwaggerMessages.ASSIGN_TASK);
+        } catch (ApiRequestException e) {
+            throw new ApiRequestException(e.getMessage(), e.getStatus());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping("/detail/{taskCode}")
+    public ResponseEntity<ResponseData<Task>> getTaskByCode(@PathVariable String taskCode) {
+        try {
+            Task task = taskService.findTaskByCode(taskCode);
+
+            return responseWithData(task, HttpStatus.OK);
+        } catch (ApiRequestException e) {
+            throw new ApiRequestException(e.getMessage(), e.getStatus());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     /**
-     * Remove staff from project response entity.
+     * Delete task
      *
-     * @param email - email
-     * @param inviteStaffRequest - inviteStaffRequest
-     * @param bindingResult - bindingResult
-     * @return ResponseEntity<Response>
+     * @param taskCode task code
+     * @return response
      */
-    @Operation(summary = SwaggerMessages.REMOVE_STAFF, tags = {"Project Controller"})
+    @Operation(summary = SwaggerMessages.DELETE_TASK, tags = {"Task Controller"})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.REMOVE_STAFF_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Project.class))),
+            @ApiResponse(responseCode = SwaggerHttpStatus.OK, description = SwaggerMessages.DELETE_TASK_MESSAGE, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(implementation = Task.class))),
             @ApiResponse(responseCode = SwaggerHttpStatus.BAD_REQUEST, description = SwaggerMessages.BAD_REQUEST, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.BAD_REQUEST_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.UNAUTHORIZED, description = SwaggerMessages.UNAUTHORIZED, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.UNAUTHORIZED_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.FORBIDDEN, description = SwaggerMessages.FORBIDDEN, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.FORBIDDEN_MESSAGE))),
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
-    @PostMapping("/remove-staff/{email}")
-    public ResponseEntity<Response> removeStaffFromProject(
-            @PathVariable String email,
-            @RequestBody InviteStaffRequest inviteStaffRequest,
-            BindingResult bindingResult
-    ) {
+    @DeleteMapping("/delete/{taskCode}")
+    public ResponseEntity<Response> deleteTask(@PathVariable String taskCode) {
         try {
-            User user = userService.findByEmail(email);
-            Project project = projectService.getProjectById(inviteStaffRequest.getProjectID());
+            Task task = taskService.findTaskByCode(taskCode);
 
-            if (!projectService.removeStaffFromProject(user, project))
-            {
-                return responseSuccess(user.getEmail() + ValidationConstants.IS_NOT_FOUND);
-            }
-            return responseSuccess(SwaggerMessages.REMOVE_STAFF);
+            taskService.deleteTask(task);
+
+            return responseSuccess(SwaggerMessages.DELETE_TASK);
+        } catch (ApiRequestException e) {
+            throw new ApiRequestException(e.getMessage(), e.getStatus());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
