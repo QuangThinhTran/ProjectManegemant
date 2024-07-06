@@ -33,8 +33,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
-
 @Tag(name = "Task Controller", description = "These endpoints are used to perform actions on Task")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
 @RestController
@@ -55,8 +53,8 @@ public class TaskController extends BaseController {
      * Get all tasks
      *
      * @param status task status
-     * @param page page
-     * @param size size
+     * @param page   page
+     * @param size   size
      * @return response
      */
     @Operation(summary = SwaggerMessages.GET_ALL_TASKS, tags = {"Task Controller"})
@@ -74,9 +72,7 @@ public class TaskController extends BaseController {
             @RequestParam(defaultValue = "10", required = false) int size
     ) {
         try {
-            System.out.println(status);
             Page<Task> tasks = taskService.listTasks(status, page, size);
-            System.out.println(tasks);
             return responseWithPageable(tasks.getContent(), tasks);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -87,7 +83,7 @@ public class TaskController extends BaseController {
     /**
      * Create task
      *
-     * @param taskRequest task request
+     * @param taskRequest   task request
      * @param bindingResult binding result
      * @return response
      */
@@ -119,8 +115,8 @@ public class TaskController extends BaseController {
     /**
      * Update task
      *
-     * @param taskCode task code
-     * @param taskRequest task request
+     * @param taskCode      task code
+     * @param taskRequest   task request
      * @param bindingResult binding result
      * @return response
      */
@@ -152,9 +148,9 @@ public class TaskController extends BaseController {
     /**
      * Update status task
      *
-     * @param taskCode task code
+     * @param taskCode                task code
      * @param updateStatusTaskRequest update status task request
-     * @param bindingResult binding result
+     * @param bindingResult           binding result
      * @return response
      */
     @Operation(summary = SwaggerMessages.UPDATE_STATUS_TASK, tags = {"Task Controller"})
@@ -190,9 +186,9 @@ public class TaskController extends BaseController {
     /**
      * Assign task to user
      *
-     * @param email email
+     * @param email             email
      * @param assignTaskRequest assign task request
-     * @param bindingResult binding result
+     * @param bindingResult     binding result
      * @return response
      */
     @Operation(summary = SwaggerMessages.ASSIGN_TASK, tags = {"Task Controller"})
@@ -214,7 +210,6 @@ public class TaskController extends BaseController {
             Task task = taskService.findTaskByCode(assignTaskRequest.getTaskCode());
 
             taskService.assignTaskToUser(task, user);
-
             return responseSuccess(SwaggerMessages.ASSIGN_TASK);
         } catch (ApiRequestException e) {
             throw new ApiRequestException(e.getMessage(), e.getStatus());
@@ -237,6 +232,7 @@ public class TaskController extends BaseController {
             throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * Delete task
      *

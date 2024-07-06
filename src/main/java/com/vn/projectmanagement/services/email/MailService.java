@@ -8,6 +8,8 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -24,18 +27,40 @@ public class MailService {
     @Value("${spring.mail.from}")
     private String from;
 
+    @Value("${rabbitmq.routingkey}")
+    private String routingkey;
+
+    @Value("${rabbitmq.exchange}")
+    private String exchange;
+
+    @Value("${rabbitmq.queue}")
+    private String queue;
+
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
     @Autowired
-    public MailService(SpringTemplateEngine templateEngine, JavaMailSender javaMailSender) {
+    public MailService(
+            SpringTemplateEngine templateEngine,
+            JavaMailSender javaMailSender
+    ) {
         this.templateEngine = templateEngine;
         this.javaMailSender = javaMailSender;
     }
 
+    /**
+     * Nhận message từ RabbitMQ và gửi email
+     *
+     * @param to           email address
+     * @param templateName email template
+     * @param attributes   email attributes
+     */
     @SneakyThrows
+    @RabbitHandler
+    @RabbitListener(queues = "${rabbitmq.queue}")
     public void sendMail(String to, String templateName, Map<String, Object> attributes) {
+        System.out.println("Hello from RabbitMQ");
         if (!isValidEmail(to)) {
             logger.error("{}" + ValidationConstants.IS_NOT_VALID_EMAIL, to);
             throw new ApiRequestException(to + ValidationConstants.IS_NOT_VALID_EMAIL, HttpStatus.BAD_REQUEST);

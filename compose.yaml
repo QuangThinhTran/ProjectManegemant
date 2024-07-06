@@ -8,7 +8,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-        - 'postgres_project_db:/var/lib/postgresql/data'
+      - 'postgres_project_db:/var/lib/postgresql/data'
   postgres_test:
     image: 'postgres:14'
     environment:
@@ -16,9 +16,20 @@ services:
       - 'POSTGRES_PASSWORD=postgres'
       - 'POSTGRES_USER=admin'
     ports:
-        - '5432:5432'
+      - '5432:5432'
     volumes:
-        - 'postgres_project_test_db:/var/lib/postgresql/data'
+      - 'postgres_project_test_db:/var/lib/postgresql/data'
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - 'RABBITMQ_DEFAULT_USER=guest'
+      - 'RABBITMQ_DEFAULT_PASS=guest'
+    volumes:
+      - 'rabbitmq_data:/var/lib/rabbitmq/mnesia'
 volumes:
-    postgres_project_db:
-    postgres_project_test_db:
+  postgres_project_db:
+  postgres_project_test_db:
+  rabbitmq_data:
