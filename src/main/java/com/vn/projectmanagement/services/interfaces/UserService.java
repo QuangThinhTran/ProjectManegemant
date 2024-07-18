@@ -6,7 +6,6 @@ import com.vn.projectmanagement.entity.request.User.UpdateUserRequest;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface UserService {
     User findByUsername(String username);

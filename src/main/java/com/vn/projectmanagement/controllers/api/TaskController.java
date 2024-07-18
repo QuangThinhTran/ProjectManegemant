@@ -6,6 +6,7 @@ import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.config.SwaggerConfig;
 import com.vn.projectmanagement.controllers.BaseController;
+import com.vn.projectmanagement.entity.dto.Task.TaskDTO;
 import com.vn.projectmanagement.entity.request.Task.AssignTaskRequest;
 import com.vn.projectmanagement.entity.request.Task.TaskRequest;
 import com.vn.projectmanagement.entity.request.Task.UpdateStatusTaskRequest;
@@ -13,6 +14,7 @@ import com.vn.projectmanagement.entity.response.Response;
 import com.vn.projectmanagement.entity.response.ResponseData;
 import com.vn.projectmanagement.entity.response.ResponsePageable;
 import com.vn.projectmanagement.exceptions.ApiRequestException;
+import com.vn.projectmanagement.mapped.interfaces.ITaskMapped;
 import com.vn.projectmanagement.models.Task;
 import com.vn.projectmanagement.models.User;
 import com.vn.projectmanagement.services.interfaces.TaskService;
@@ -42,11 +44,17 @@ public class TaskController extends BaseController {
     private final TaskService taskService;
     private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+    private final ITaskMapped taskMapped;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService) {
+    public TaskController(
+            TaskService taskService,
+            UserService userService,
+            ITaskMapped taskMapped
+    ) {
         this.taskService = taskService;
         this.userService = userService;
+        this.taskMapped = taskMapped;
     }
 
     /**
@@ -66,14 +74,15 @@ public class TaskController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @GetMapping("/list-by-status/{status}")
-    public ResponseEntity<ResponsePageable<Task>> getFilterStatus(
+    public ResponseEntity<ResponsePageable<TaskDTO>> getFilterStatus(
             @PathVariable String status,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "10", required = false) int size
     ) {
         try {
             Page<Task> tasks = taskService.listTasks(status, page, size);
-            return responseWithPageable(tasks.getContent(), tasks);
+            Page<TaskDTO> taskDTOS = taskMapped.convertPageTaskToPageTaskDTO(tasks);
+            return responseWithPageable(taskDTOS.getContent(), taskDTOS);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -102,7 +111,6 @@ public class TaskController extends BaseController {
     ) {
         try {
             taskService.createTask(taskRequest);
-
             return responseCreated(SwaggerMessages.CREATE_TASK);
         } catch (ApiRequestException e) {
             throw new ApiRequestException(e.getMessage(), e.getStatus());
@@ -220,11 +228,11 @@ public class TaskController extends BaseController {
     }
 
     @GetMapping("/detail/{taskCode}")
-    public ResponseEntity<ResponseData<Task>> getTaskByCode(@PathVariable String taskCode) {
+    public ResponseEntity<ResponseData<TaskDTO>> getTaskByCode(@PathVariable String taskCode) {
         try {
             Task task = taskService.findTaskByCode(taskCode);
-
-            return responseWithData(task, HttpStatus.OK);
+            TaskDTO taskDTO = taskMapped.mapTaskDTO(task);
+            return responseWithData(taskDTO, HttpStatus.OK);
         } catch (ApiRequestException e) {
             throw new ApiRequestException(e.getMessage(), e.getStatus());
         } catch (Exception e) {

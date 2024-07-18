@@ -2,10 +2,12 @@ package com.vn.projectmanagement.services;
 
 import com.vn.projectmanagement.common.constants.ExceptionConstant;
 import com.vn.projectmanagement.common.constants.ValidationConstants;
+import com.vn.projectmanagement.entity.dto.User.UserDTO;
 import com.vn.projectmanagement.entity.request.Auth.RegisterRequest;
 import com.vn.projectmanagement.entity.request.User.UpdatePasswordRequest;
 import com.vn.projectmanagement.entity.request.User.UpdateUserRequest;
 import com.vn.projectmanagement.exceptions.ApiRequestException;
+import com.vn.projectmanagement.mapped.UserMapped;
 import com.vn.projectmanagement.models.Image;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;

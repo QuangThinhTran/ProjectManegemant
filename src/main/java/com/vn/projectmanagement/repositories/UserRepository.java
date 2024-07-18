@@ -1,11 +1,13 @@
 package com.vn.projectmanagement.repositories;
 
+import com.vn.projectmanagement.models.Project;
 import com.vn.projectmanagement.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,4 +26,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "GROUP BY user.id, user.username, user.email, user.phone, user.role"
     )
     Page<User> listUser(Pageable pageable);
+
+    List<User> findAllByProjectList(Project project);
 }

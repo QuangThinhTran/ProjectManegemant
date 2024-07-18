@@ -1,9 +1,11 @@
 package com.vn.projectmanagement.entity.response;
 
+import lombok.Data;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+@Data
 public class ResponsePageable<T> {
 
     private List<T> data;

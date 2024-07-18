@@ -8,6 +8,7 @@ import com.vn.projectmanagement.common.utils.UploadFile;
 import com.vn.projectmanagement.config.SwaggerConfig;
 import com.vn.projectmanagement.controllers.BaseController;
 import com.vn.projectmanagement.entity.dto.AuthenticationDTO;
+import com.vn.projectmanagement.entity.dto.User.UserDTO;
 import com.vn.projectmanagement.entity.response.Response;
 import com.vn.projectmanagement.entity.response.ResponseData;
 import com.vn.projectmanagement.entity.response.ResponseDataMessage;
@@ -15,6 +16,7 @@ import com.vn.projectmanagement.entity.request.User.UpdatePasswordRequest;
 import com.vn.projectmanagement.entity.request.User.UpdateUserRequest;
 import com.vn.projectmanagement.entity.response.ResponsePageable;
 import com.vn.projectmanagement.exceptions.ApiRequestException;
+import com.vn.projectmanagement.mapped.interfaces.IUserMapped;
 import com.vn.projectmanagement.models.User;
 import com.vn.projectmanagement.services.interfaces.AuthService;
 import com.vn.projectmanagement.services.interfaces.UserService;
@@ -28,6 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,11 +48,19 @@ public class UserController extends BaseController {
     private final AuthService authService;
     private final UploadFile uploadFile;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final IUserMapped userMapped;
 
-    public UserController(UserService userService, AuthService authService, UploadFile uploadFile) {
+    @Autowired
+    public UserController(
+            UserService userService,
+            AuthService authService,
+            UploadFile uploadFile,
+            IUserMapped userMapped
+    ) {
         this.userService = userService;
         this.authService = authService;
         this.uploadFile = uploadFile;
+        this.userMapped = userMapped;
     }
 
     /**
@@ -67,9 +78,10 @@ public class UserController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @GetMapping("/detail/{email}")
-    public ResponseEntity<ResponseData<User>> findUserByEmail(@PathVariable String email) {
+    public ResponseEntity<ResponseData<UserDTO>> findUserByEmail(@PathVariable String email) {
         User user = userService.findByEmail(email);
-        return this.responseWithData(user, HttpStatus.OK);
+        UserDTO userDto = userMapped.mapUserDTO(user);
+        return this.responseWithData(userDto, HttpStatus.OK);
     }
 
     /**
@@ -88,13 +100,14 @@ public class UserController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @GetMapping("/list")
-    public ResponseEntity<ResponsePageable<User>> findAllUsers(
+    public ResponseEntity<ResponsePageable<UserDTO>> findAllUsers(
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "0") int page
     ) {
         try {
             Page<User> usersPage = userService.filterUsers(page, size);
-            return this.responseWithPageable(usersPage.getContent(), usersPage);
+            Page<UserDTO> userDTOPage = userMapped.convertPageUserToPageUserDTO(usersPage);
+            return this.responseWithPageable(userDTOPage.getContent(), userDTOPage);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);

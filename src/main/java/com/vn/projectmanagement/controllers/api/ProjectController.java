@@ -1,6 +1,5 @@
 package com.vn.projectmanagement.controllers.api;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.vn.projectmanagement.common.constants.PathConstants;
 import com.vn.projectmanagement.common.constants.ValidationConstants;
 import com.vn.projectmanagement.common.swagger.SwaggerHelper;
@@ -8,12 +7,14 @@ import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
 import com.vn.projectmanagement.config.SwaggerConfig;
 import com.vn.projectmanagement.controllers.BaseController;
+import com.vn.projectmanagement.entity.dto.Project.ProjectDTO;
 import com.vn.projectmanagement.entity.request.Project.InviteStaffRequest;
 import com.vn.projectmanagement.entity.request.Project.ProjectRequest;
 import com.vn.projectmanagement.entity.response.Response;
 import com.vn.projectmanagement.entity.response.ResponseData;
 import com.vn.projectmanagement.entity.response.ResponsePageable;
 import com.vn.projectmanagement.exceptions.ApiRequestException;
+import com.vn.projectmanagement.mapped.interfaces.IProjectMapped;
 import com.vn.projectmanagement.models.Project;
 import com.vn.projectmanagement.models.User;
 import com.vn.projectmanagement.services.interfaces.ProjectService;
@@ -45,11 +46,13 @@ public class ProjectController extends BaseController {
     private final ProjectService projectService;
     private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final IProjectMapped projectMapped;
 
     @Autowired
-    public ProjectController(ProjectService projectService, UserService userService) {
+    public ProjectController(ProjectService projectService, UserService userService, IProjectMapped projectMapped) {
         this.projectService = projectService;
         this.userService = userService;
+        this.projectMapped = projectMapped;
     }
 
     /**
@@ -68,13 +71,14 @@ public class ProjectController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @GetMapping("/list")
-    public ResponseEntity<ResponsePageable<Project>> listProjects(
+    public ResponseEntity<ResponsePageable<ProjectDTO>> listProjects(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         try {
             Page<Project> projects = projectService.listProjects(page, size);
-            return responseWithPageable(projects.getContent(), projects);
+            Page<ProjectDTO> projectDTOsPage = projectMapped.convertPageProjectToPageProjectDTO(projects);
+            return responseWithPageable(projectDTOsPage.getContent(), projectDTOsPage);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ApiRequestException(SwaggerMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -125,12 +129,13 @@ public class ProjectController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @GetMapping("/detail/{title}")
-    public ResponseEntity<ResponseData<Project>> getProjectByTitle(
+    public ResponseEntity<ResponseData<ProjectDTO>> getProjectByTitle(
             @PathVariable String title
     ) {
         try {
             Project project = projectService.getProjectByTitle(title);
-            return responseWithData(project, HttpStatus.OK);
+            ProjectDTO projectDTO = projectMapped.mapProjectDTO(project);
+            return responseWithData(projectDTO, HttpStatus.OK);
         } catch (ApiRequestException e) {
             logger.error(e.getMessage());
             throw new ApiRequestException(e.getMessage(), e.getStatus());
@@ -202,9 +207,9 @@ public class ProjectController extends BaseController {
     /**
      * Invite staff to project response entity.
      *
-     * @param email - email
+     * @param email              - email
      * @param inviteStaffRequest - inviteStaffRequest
-     * @param bindingResult - bindingResult
+     * @param bindingResult      - bindingResult
      * @return ResponseEntity<Response>
      */
     @Operation(summary = SwaggerMessages.INVITE_STAFF, tags = {"Project Controller"})
@@ -240,9 +245,9 @@ public class ProjectController extends BaseController {
     /**
      * Remove staff from project response entity.
      *
-     * @param email - email
+     * @param email              - email
      * @param inviteStaffRequest - inviteStaffRequest
-     * @param bindingResult - bindingResult
+     * @param bindingResult      - bindingResult
      * @return ResponseEntity<Response>
      */
     @Operation(summary = SwaggerMessages.REMOVE_STAFF, tags = {"Project Controller"})
@@ -263,8 +268,7 @@ public class ProjectController extends BaseController {
             User user = userService.findByEmail(email);
             Project project = projectService.getProjectById(inviteStaffRequest.getProjectID());
 
-            if (!projectService.removeStaffFromProject(user, project))
-            {
+            if (!projectService.removeStaffFromProject(user, project)) {
                 return responseSuccess(user.getEmail() + ValidationConstants.IS_NOT_FOUND);
             }
             return responseSuccess(SwaggerMessages.REMOVE_STAFF);
