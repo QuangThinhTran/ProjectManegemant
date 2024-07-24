@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Auth Controller", description = "These endpoints are used to perform actions on authentication.")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
-@RestController
+@RestController(value = "AuthControllerAPI")
 @Validated
 @RequestMapping(PathConstants.API_AUTH)
 public class AuthController extends BaseController {

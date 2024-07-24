@@ -1,0 +1,19 @@
+type Query {}
+
+type UserProject {
+    user: BaseUser,
+    project: BaseProject,
+}
+
+type BaseUser {
+    username: String,
+    email: String,
+    phone: String,
+    role : String,
+    avatar : String,
+}
+
+type  BaseProject {
+    title: String,
+    description: String,
+}

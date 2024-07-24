@@ -1,0 +1,13 @@
+type User {
+    username: String,
+    email: String,
+    phone: String,
+    role : String,
+    avatar : String,
+    projects: [BaseProject],
+}
+
+extend type Query {
+    findAllUsers(page: Int, size: Int): [User],
+    findUserByEmail(email: String): User,
+}

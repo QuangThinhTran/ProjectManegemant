@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Task Controller", description = "These endpoints are used to perform actions on Task")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
-@RestController
+@RestController(value = "TaskControllerAPI")
 @RequestMapping(PathConstants.API_TASK)
 public class TaskController extends BaseController {
 

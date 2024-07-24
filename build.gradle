@@ -28,6 +28,7 @@ ext {
     set('vaadinVersion', "24.3.12")
 }
 
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
@@ -43,6 +44,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:14.0.0'
 
     compileOnly 'org.projectlombok:lombok'
 

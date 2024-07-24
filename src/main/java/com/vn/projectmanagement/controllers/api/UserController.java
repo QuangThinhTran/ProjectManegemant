@@ -40,7 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "User Controller", description = "These endpoints are used to perform actions on user.")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
-@RestController
+@RestController(value = "UserControllerAPI")
 @RequestMapping(PathConstants.API_USER)
 public class UserController extends BaseController {
 

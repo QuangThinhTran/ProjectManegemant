@@ -1,0 +1,34 @@
+type Query {
+    findAllUsers(page: Int, size: Int): [User],
+    findUserByEmail(email: String): User,
+    findAllProjects(page: Int, size: Int): [Project],
+    findProjectByTitle(title: String): Project,
+}
+
+type  BaseProject {
+    title: String,
+    description: String,
+}
+
+type Project {
+    title: String,
+    description: String,
+    members: [BaseUser],
+}
+
+type BaseUser {
+    username: String,
+    email: String,
+    phone: String,
+    role : String,
+    avatar : String,
+}
+
+type User {
+    username: String,
+    email: String,
+    phone: String,
+    role : String,
+    avatar : String,
+    projects: [BaseProject],
+}

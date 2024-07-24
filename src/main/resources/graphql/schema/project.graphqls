@@ -1,0 +1,10 @@
+type Project {
+    title: String,
+    description: String,
+    members: [BaseUser],
+}
+
+extend type Query {
+    findAllProjects(page: Int, size: Int): [Project],
+    findProjectByTitle(title: String): Project,
+}

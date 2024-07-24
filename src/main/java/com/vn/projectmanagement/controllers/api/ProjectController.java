@@ -39,7 +39,7 @@ import java.util.UUID;
 
 @Tag(name = "Project Controller", description = "These endpoints are used to perform actions on Project")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
-@RestController
+@RestController(value = "ProjectControllerAPI")
 @RequestMapping(PathConstants.API_PROJECT)
 public class ProjectController extends BaseController {
 

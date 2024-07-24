@@ -35,7 +35,7 @@ import java.util.List;
 @Tag(name = "Role Controller", description = "These endpoints are used to perform actions on role.")
 @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
 // Yêu cầu xác thực khi truy cập các endpoint trong controller này (đã được cấu hình trong SwaggerConfig)
-@RestController
+@RestController(value = "RoleControllerAPI")
 @Validated
 @RequestMapping(PathConstants.API_ROLE)
 public class RoleController extends BaseController {
