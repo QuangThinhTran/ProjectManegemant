@@ -13,6 +13,8 @@ public interface ITaskMapped {
 
     TaskDTO mapTaskDTO(Task task);
 
+    BaseTaskDTO mapBaseTaskDTO(Task task);
+
     List<BaseTaskDTO> convertListTaskToListBaseTaskDTO(Project project);
 
     List<BaseTaskDTO> convertListTaskToListBaseTaskDTO(User user);

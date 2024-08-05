@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -190,6 +191,7 @@ public class ProjectController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Response> deleteProject(
             @PathVariable UUID id
     ) {
@@ -221,6 +223,7 @@ public class ProjectController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/invite-staff/{email}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Response> inviteStaffToProject(
             @PathVariable String email,
             @RequestBody InviteStaffRequest inviteStaffRequest,
@@ -259,6 +262,7 @@ public class ProjectController extends BaseController {
             @ApiResponse(responseCode = SwaggerHttpStatus.INTERNAL_SERVER_ERROR, description = SwaggerMessages.INTERNAL_SERVER_ERROR, content = @Content(mediaType = SwaggerHelper.APPLICATION_JSON, schema = @Schema(example = SwaggerMessages.INTERNAL_SERVER_ERROR_MESSAGE)))
     })
     @PostMapping("/remove-staff/{email}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Response> removeStaffFromProject(
             @PathVariable String email,
             @RequestBody InviteStaffRequest inviteStaffRequest,

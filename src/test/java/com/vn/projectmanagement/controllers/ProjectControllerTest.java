@@ -62,6 +62,7 @@ public class ProjectControllerTest {
     @AfterEach
     public void tearDown() {
         projectFactory.deleteAll();
+        roleFactory.delete();
     }
 
     /**

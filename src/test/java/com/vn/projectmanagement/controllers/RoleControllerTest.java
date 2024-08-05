@@ -55,7 +55,7 @@ public class RoleControllerTest {
 
     @AfterEach
     public void tearDown() {
-        roleRepository.deleteAll();
+        roleFactory.delete();
     }
 
     /**

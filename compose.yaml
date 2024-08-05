@@ -1,35 +1,22 @@
 services:
-  mysql:
-    image: 'mysql:latest'
-    environment:
-      - 'MYSQL_DATABASE=sharebly'
-      - 'MYSQL_USER=root'
-      - 'MYSQL_PASSWORD=admin'
-      - 'MYSQL_ROOT_PASSWORD=root'
-    ports:
-      - '3307:3306'
-    volumes:
-        - 'mysql_data:/var/lib/mysql'
+  # mysql:
+  #   image: 'mysql:latest'
+  #   environment:
+  #     - 'MYSQL_USER=mysql'
+  #     - 'MYSQL_ALLOW_EMPTY_PASSWORD=yes'
+  #   ports:
+  #     - '3306:3306'
+  #   volumes:
+  #     - 'mysql_db:/var/lib/mysql'
   postgres:
     image: 'postgres:14'
     environment:
-      - 'POSTGRES_DB=ProjectManagement'
-      - 'POSTGRES_PASSWORD=postgres'
       - 'POSTGRES_USER=admin'
+      - 'POSTGRES_PASSWORD=root'
     ports:
       - '5432:5432'
     volumes:
-      - 'postgres_project_db:/var/lib/postgresql/data'
-  postgres_test:
-    image: 'postgres:14'
-    environment:
-      - 'POSTGRES_DB=ProjectManagementTest'
-      - 'POSTGRES_PASSWORD=postgres'
-      - 'POSTGRES_USER=admin'
-    ports:
-      - '5432:5432'
-    volumes:
-      - 'postgres_project_test_db:/var/lib/postgresql/data'
+      - 'postgres_db:/var/lib/postgresql/data'
   rabbitmq:
     image: 'rabbitmq:3-management'
     ports:
@@ -39,9 +26,8 @@ services:
       - 'RABBITMQ_DEFAULT_USER=guest'
       - 'RABBITMQ_DEFAULT_PASS=guest'
     volumes:
-      - 'rabbitmq_data:/var/lib/rabbitmq/mnesia'
+      - 'rabbitmq_db:/var/lib/rabbitmq/mnesia'
 volumes:
-  postgres_project_db:
-  postgres_project_test_db:
-  rabbitmq_data:
-  mysql_data:
+  postgres_db:
+  rabbitmq_db:
+  mysql_db:

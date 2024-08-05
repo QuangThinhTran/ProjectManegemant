@@ -1,0 +1,325 @@
+{
+    "info": {
+      "name": "Project Management API",
+      "description": "Collection of API requests for Project Management application",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Auth",
+        "item": [
+          {
+            "name": "Register",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"testuser@example.com\",\n  \"phone\": \"1234567890\",\n  \"password\": \"password\",\n  \"confirmPassword\": \"password\",\n  \"role\": \"USER\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/auth/register",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "auth", "register"]
+              }
+            }
+          },
+          {
+            "name": "Login",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"password\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/auth/login",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "auth", "login"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "item": [
+          {
+            "name": "Get All Users",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/api/user/list",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "user", "list"]
+              }
+            }
+          },
+          {
+            "name": "Update User",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"username\": \"updateduser\",\n  \"email\": \"updateduser@example.com\",\n  \"phone\": \"0987654321\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/user/update/{username}",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "user", "update", "{username}"],
+                "variable": [
+                  {
+                    "key": "username",
+                    "value": "testuser"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Change Password",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"newpassword\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/user/update-password/{username}",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "user", "update-password", "{username}"],
+                "variable": [
+                  {
+                    "key": "username",
+                    "value": "testuser"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Project",
+        "item": [
+          {
+            "name": "Get All Projects",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/api/project/list",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "project", "list"]
+              }
+            }
+          },
+          {
+            "name": "Create Project",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"title\": \"New Project\",\n  \"description\": \"Project description\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/project/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "project", "create"]
+              }
+            }
+          },
+          {
+            "name": "Update Project",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"title\": \"Updated Project\",\n  \"description\": \"Updated description\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/project/update/{id}",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "project", "update", "{id}"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "projectId"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Delete Project",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/api/project/delete/{id}",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "project", "delete", "{id}"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "projectId"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Task",
+        "item": [
+          {
+            "name": "Create Task",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"title\": \"New Task\",\n  \"description\": \"Task description\",\n  \"status\": \"todo\",\n  \"expirationDate\": \"2023-12-31\",\n  \"projectID\": \"projectId\",\n  \"userEmail\": \"user@example.com\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/task/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "task", "create"]
+              }
+            }
+          },
+          {
+            "name": "Update Task",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"title\": \"Updated Task\",\n  \"description\": \"Updated description\",\n  \"status\": \"in-progress\",\n  \"expirationDate\": \"2023-12-31\",\n  \"projectID\": \"projectId\",\n  \"userEmail\": \"user@example.com\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/task/update/{taskCode}",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "task", "update", "{taskCode}"],
+                "variable": [
+                  {
+                    "key": "taskCode",
+                    "value": "taskCode"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Delete Task",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/api/task/delete/{taskCode}",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "task", "delete", "{taskCode}"],
+                "variable": [
+                  {
+                    "key": "taskCode",
+                    "value": "taskCode"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }

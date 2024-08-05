@@ -10,9 +10,6 @@ import com.vn.projectmanagement.factory.RoleFactory;
 import com.vn.projectmanagement.factory.UserFactory;
 import com.vn.projectmanagement.models.Role;
 import com.vn.projectmanagement.models.User;
-import com.vn.projectmanagement.repositories.RoleRepository;
-import com.vn.projectmanagement.repositories.UserRepository;
-import com.vn.projectmanagement.services.interfaces.AuthService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,8 +56,8 @@ public class AuthControllerTest {
 
     @AfterEach
     public void tearDown() {
-        roleFactory.delete();
         userFactory.delete();
+        roleFactory.delete();
     }
 
     /**

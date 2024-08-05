@@ -1,7 +1,7 @@
 package com.vn.projectmanagement.security.JWT;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vn.projectmanagement.common.swagger.SwaggerMessages;
+import com.vn.projectmanagement.common.utils.Helper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,8 +11,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
@@ -37,14 +35,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json");
 
-        // Tạo một Map để biểu diễn phần thân của response
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("status", HttpStatus.FORBIDDEN.value());
-        responseBody.put("message", SwaggerMessages.INVALID_JWT_TOKEN);
-
-        // Chuyển Map thành chuỗi JSON
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonResponse = objectMapper.writeValueAsString(responseBody);
+        String jsonResponse = Helper.mapResponse(HttpStatus.FORBIDDEN, SwaggerMessages.FORBIDDEN);
 
         // Trả về thông báo lỗi khi token không hợp lệ
         response.getWriter().write(jsonResponse);

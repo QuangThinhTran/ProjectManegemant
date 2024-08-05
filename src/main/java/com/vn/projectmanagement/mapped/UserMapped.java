@@ -87,10 +87,9 @@ public class UserMapped implements IUserMapped {
      * @param project Project
      * @return List<BaseUserDTO>
      */
-    @Override
     public List<BaseUserDTO> convertListUserToListBaseUserDTO(Project project) {
         List<BaseUserDTO> projectUserDTOs = new ArrayList<>();
-        userRepository.findAllByProjectList(project).forEach(this::mapBaseUserDTO);
+        userRepository.findAllByProjectList(project).forEach(user -> projectUserDTOs.add(mapBaseUserDTO(user)));
         return projectUserDTOs;
     }
 }
