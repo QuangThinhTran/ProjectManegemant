@@ -43,7 +43,25 @@ public class TaskMapped implements ITaskMapped {
      * @return TaskDTO
      */
     @Override
-    public TaskDTO mapTaskDTO(Task task) {
+    public BaseTaskDTO mapBaseTaskDTO(Task task) {
+        BaseTaskDTO baseTaskDTO = new BaseTaskDTO();
+        baseTaskDTO.setTaskCode(task.getTaskCode());
+        baseTaskDTO.setTitle(task.getTitle());
+        baseTaskDTO.setDescription(task.getDescription());
+        baseTaskDTO.setStatus(task.getStatus());
+        baseTaskDTO.setExpirationDate(task.getExpirationDate());
+        return baseTaskDTO;
+    }
+
+    /**
+     * Map Task to TaskDTO
+     *
+     * @param task Task
+     * @return TaskDTO
+     */
+    @Override
+    public TaskDTO mapTaskDTO(Task task)
+    {
         TaskDTO taskDTO = new TaskDTO();
         taskDTO.setTaskCode(task.getTaskCode());
         taskDTO.setTitle(task.getTitle());
@@ -63,9 +81,9 @@ public class TaskMapped implements ITaskMapped {
      */
     @Override
     public List<BaseTaskDTO> convertListTaskToListBaseTaskDTO(Project project) {
-        List<BaseTaskDTO> projectTaskDTOList = new ArrayList<>();
-        taskRepository.findAllByProject(project).forEach(this::mapTaskDTO);
-        return projectTaskDTOList;
+        List<BaseTaskDTO> baseTaskDTOList = new ArrayList<>();
+        taskRepository.findAllByProject(project).forEach(task -> baseTaskDTOList.add(mapBaseTaskDTO(task)));
+        return baseTaskDTOList;
     }
 
     /**

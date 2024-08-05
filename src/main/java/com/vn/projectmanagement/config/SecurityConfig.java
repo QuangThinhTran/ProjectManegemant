@@ -1,11 +1,15 @@
 package com.vn.projectmanagement.config;
 
+import com.vn.projectmanagement.common.swagger.SwaggerHttpStatus;
+import com.vn.projectmanagement.common.swagger.SwaggerMessages;
+import com.vn.projectmanagement.common.utils.Helper;
 import com.vn.projectmanagement.security.JWT.JwtAuthEntryPoint;
 import com.vn.projectmanagement.security.JWT.JwtAuthFilter;
 import com.vn.projectmanagement.security.JWT.JwtTokenUtil;
 import com.vn.projectmanagement.security.JWT.JwtUserDetail;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -64,6 +68,7 @@ public class SecurityConfig {
 
     /**
      * Phương thức tạo ra một bean SecurityFilterChain để xác thực người dùng trong quá trình xác thực và phân quyền cho người dùng truy cập vào các API của hệ thống thông qua các request
+     *
      * @param httpSecurity - đối tượng HttpSecurity
      * @return SecurityFilterChain để xác thực người dùng trong quá trình xác thực và phân quyền cho người dùng truy cập vào các API của hệ thống thông qua các request
      * @throws Exception - nếu có lỗi xảy ra trong quá trình xác thực
@@ -75,14 +80,21 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 // - Cấu hình xử lý lỗi xác thực và phân quyền khi xác thực thất bại
-                .exceptionHandling(exceptionHandlingConfigurer ->
-                        exceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthEntryPoint)
+                .exceptionHandling(exceptionHandlingConfigurer -> {
+                            exceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthEntryPoint);
+                            exceptionHandlingConfigurer.accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
+                                httpServletResponse.setContentType("application/json");
+                                httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+                                httpServletResponse.getWriter().write(Helper.mapResponse(HttpStatus.FORBIDDEN, SwaggerMessages.FORBIDDEN));
+                            });
+                        }
                 )
                 .authorizeHttpRequests(registry -> registry
                         // Cấu hình cho các request được phép truy cập vào các API của hệ thống thông qua các request (các API được phép truy cập sẽ được cấu hình ở đây)
                         // và các request không được phép truy cập sẽ được chuyển hướng về trang xác thực hoặc trả về lỗi xác thực
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/project/remove-staff/**", "/api/project/delete/**").hasRole("admin") // Chỉ cho phép admin truy cập vào các API này
                         .anyRequest().authenticated() // Các request khác sẽ được yêu cầu xác thực
                 );
         // Thêm JwtAuthFilter vào FilterChain để xác thực người dùng trong quá trình xác thực và phân quyền
